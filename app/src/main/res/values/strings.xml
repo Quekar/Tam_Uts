@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TasteMap</string>
+    <string name="explore_promo">Jelajahi 38 Provinsi Indonesia</string>
+    <string name="popular_recipes">Resep Populer</string>
+    <string name="new_recipes">Resep Terbaru</string>
+    <string name="quick_nav">Navigasi Cepat</string>
+</resources>
