@@ -1,7 +1,6 @@
 package com.example.tam_uts.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,10 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.tam_uts.data.Recipe
 
 // Warna Global
@@ -43,9 +42,23 @@ fun ScreenHeader(title: String, onBack: () -> Unit) {
 
 @Composable
 fun RecipeCard(recipe: Recipe, onClick: () -> Unit) {
-    Card(modifier = Modifier.width(150.dp).height(180.dp).clickable { onClick() }) {
+    Card(
+        modifier = Modifier
+            .width(160.dp)
+            .height(200.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
         Column {
-            Image(painter = painterResource(id = android.R.drawable.ic_menu_gallery), contentDescription = null, modifier = Modifier.fillMaxWidth().weight(1f), contentScale = ContentScale.Crop)
+            AsyncImage(
+                model = recipe.imageUrl,
+                contentDescription = recipe.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentScale = ContentScale.Crop
+            )
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(recipe.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1)
                 Text(recipe.origin, fontSize = 10.sp, color = Orange500)
@@ -67,12 +80,25 @@ fun RegionListItem(origin: String, onClick: () -> Unit) {
 
 @Composable
 fun BookmarkRecipeItem(recipe: Recipe, onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().clickable { onClick() }, colors = CardDefaults.cardColors(containerColor = LightGray)) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = LightGray),
+        shape = RoundedCornerShape(12.dp)
+    ) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Image(painter = painterResource(id = android.R.drawable.ic_menu_gallery), contentDescription = null, modifier = Modifier.size(60.dp).clip(RoundedCornerShape(8.dp)), contentScale = ContentScale.Crop)
+            AsyncImage(
+                model = recipe.imageUrl,
+                contentDescription = recipe.name,
+                modifier = Modifier
+                    .size(70.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(recipe.name, fontWeight = FontWeight.Bold)
+                Text(recipe.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Text(recipe.origin, fontSize = 12.sp, color = Orange500)
             }
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
@@ -130,6 +156,6 @@ fun IngredientItem(text: String) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 4.dp)) {
         Box(modifier = Modifier.size(6.dp).background(Orange500, CircleShape))
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text)
+        Text(text, fontSize = 14.sp, color = Color.DarkGray)
     }
 }

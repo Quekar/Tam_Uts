@@ -10,8 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.data.*
@@ -24,7 +26,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Tam_UtsTheme {
-                MainApp()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainApp()
+                }
             }
         }
     }
@@ -32,9 +39,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp() {
-    // ── Mulai dari halaman LOGIN ──────────────────────────────────────
-    var currentPage by remember { mutableStateOf(Page.LOGIN) }
-    var previousPage by remember { mutableStateOf(Page.HOME) }
+    // Navigasi state
+    var currentPage by rememberSaveable { mutableStateOf(Page.LOGIN) }
+    var previousPage by rememberSaveable { mutableStateOf(Page.HOME) }
+    
+    // State User agar perubahan profil langsung terlihat di UI
+    var userState by remember { mutableStateOf(DummyData.dummyUser) }
+    
+    // State Resep Detail
     var selectedRecipe by remember { mutableStateOf(DummyData.dummyRecipes[0]) }
 
     val navigateToDetail: (Recipe) -> Unit = { recipe ->
@@ -43,28 +55,27 @@ fun MainApp() {
         currentPage = Page.DETAIL
     }
 
-    // Halaman-halaman yang menampilkan bottom navigation bar
     val mainTabs = listOf(
         Page.HOME, Page.REGIONS, Page.SEARCH,
         Page.ADD, Page.BOOKMARKS, Page.PROFILE
     )
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().background(Color.White),
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             if (currentPage in mainTabs) {
                 BottomNavigationBar(currentPage = currentPage) { currentPage = it }
             }
         }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(innerPadding)
+                .fillMaxSize()
                 .background(Color.White)
         ) {
             when (currentPage) {
-
-                // ── Auth ──────────────────────────────────────────────
+                // Auth
                 Page.LOGIN -> LoginScreen(
                     onLoginSuccess = { currentPage = Page.HOME },
                     onNavigateToRegister = { currentPage = Page.REGISTER }
@@ -73,8 +84,8 @@ fun MainApp() {
                     onRegisterSuccess = { currentPage = Page.HOME },
                     onNavigateToLogin = { currentPage = Page.LOGIN }
                 )
-
-                // ── Main tabs ─────────────────────────────────────────
+                
+                // Tabs
                 Page.HOME -> HomeScreen(
                     onRecipeClick = navigateToDetail,
                     onNavClick = { currentPage = Page.REGIONS }
@@ -84,19 +95,25 @@ fun MainApp() {
                 Page.ADD     -> AddRecipeScreen(onAddSuccess = { currentPage = Page.HOME })
                 Page.BOOKMARKS -> BookmarksScreen(onRecipeClick = navigateToDetail)
                 Page.PROFILE -> ProfileScreen(
-                    user = DummyData.dummyUser,
+                    user = userState,
                     onNavigate = { currentPage = it }
                 )
 
-                // ── Detail & sub-pages ────────────────────────────────
+                // Sub-pages
                 Page.DETAIL -> RecipeDetailScreen(
                     recipe = selectedRecipe,
                     onBack = { currentPage = previousPage }
                 )
-                Page.EDIT_PROFILE      -> EditProfileScreen(onBack = { currentPage = Page.PROFILE })
-                Page.NOTIFICATIONS     -> NotificationScreen(onBack = { currentPage = Page.PROFILE })
-                Page.SHIPPING_ADDRESS  -> ShippingAddressScreen(onBack = { currentPage = Page.PROFILE })
-                Page.SETTINGS          -> SettingsScreen(onBack = { currentPage = Page.PROFILE })
+                Page.EDIT_PROFILE -> EditProfileScreen(
+                    user = userState,
+                    onSave = { updatedUser ->
+                        userState = updatedUser
+                        DummyData.dummyUser = userState
+                    },
+                    onBack = { currentPage = Page.PROFILE }
+                )
+                Page.NOTIFICATIONS -> NotificationScreen(onBack = { currentPage = Page.PROFILE })
+                Page.SETTINGS -> SettingsScreen(onBack = { currentPage = Page.PROFILE })
             }
         }
     }
@@ -104,7 +121,7 @@ fun MainApp() {
 
 @Composable
 fun BottomNavigationBar(currentPage: Page, onPageSelected: (Page) -> Unit) {
-    NavigationBar(containerColor = Color.White) {
+    NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
         val items = listOf(
             Triple(Page.HOME,      Icons.Default.Home,   "Home"),
             Triple(Page.REGIONS,   Icons.Default.Place,  "Wilayah"),
@@ -122,7 +139,8 @@ fun BottomNavigationBar(currentPage: Page, onPageSelected: (Page) -> Unit) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Orange500,
                     selectedTextColor = Orange500,
-                    unselectedIconColor = Color.Gray
+                    unselectedIconColor = Color.Gray,
+                    indicatorColor = Orange500.copy(alpha = 0.1f)
                 )
             )
         }

@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tam_uts.components.LightGray
@@ -150,14 +149,12 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    when {
-                        email.isEmpty() || password.isEmpty() ->
-                            Toast.makeText(context, "Email dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show()
-                        !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
-                            Toast.makeText(context, "Format email tidak valid!", Toast.LENGTH_SHORT).show()
-                        password.length < 6 ->
-                            Toast.makeText(context, "Password minimal 6 karakter!", Toast.LENGTH_SHORT).show()
-                        else -> onLoginSuccess()
+                    if (email.isEmpty() || password.isEmpty()) {
+                        Toast.makeText(context, "Email dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+                    } else if (password.length < 6) {
+                        Toast.makeText(context, "Password minimal 6 karakter!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        onLoginSuccess()
                     }
                 },
                 modifier = Modifier.fillMaxWidth().height(52.dp),
@@ -170,14 +167,14 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Divider(modifier = Modifier.weight(1f), color = Color.LightGray)
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
                 Text(
                     "  atau masuk dengan  ",
                     fontSize = 12.sp,
                     color = Color.Gray,
                     fontWeight = FontWeight.SemiBold
                 )
-                Divider(modifier = Modifier.weight(1f), color = Color.LightGray)
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
