@@ -1,50 +1,34 @@
-package com.example.tam_uts.ui.theme // Sesuaikan dengan package Anda
+package com.example.tam_uts.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Orange200,
-    secondary = White,
-    tertiary = Orange700
-)
-
-private val LightColorScheme = lightColorScheme(
+private val AppColorScheme = lightColorScheme(
     primary = Orange500,
-    secondary = White,
+    secondary = Color.White,
     tertiary = Orange700,
-    background = White,
-    surface = White,
-    onPrimary = White,
-    onSecondary = Black,
-    onTertiary = White,
-    onBackground = Black,
-    onSurface = Black,
+    background = Color.White,
+    surface = Color.White,
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onTertiary = Color.White,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+    surfaceVariant = Color(0xFFF5F5F5),
+    onSurfaceVariant = Color.DarkGray
 )
 
 @Composable
 fun Tam_UtsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S -> {
-            // val context = LocalContext.current
-            // if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            // Sementara matikan dynamic color untuk memastikan warna kita yang dipakai
-            if (darkTheme) DarkColorScheme else LightColorScheme
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = AppColorScheme,
         typography = Typography,
         content = content
     )

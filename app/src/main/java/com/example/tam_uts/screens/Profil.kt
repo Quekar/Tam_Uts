@@ -84,7 +84,7 @@ fun ProfileScreen(user: User, onNavigate: (Page) -> Unit) {
         Spacer(modifier = Modifier.height(40.dp))
         
         TextButton(
-            onClick = { /* Logout */ },
+            onClick = { },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Keluar dari Akun", color = Color.Red, fontWeight = FontWeight.Bold)

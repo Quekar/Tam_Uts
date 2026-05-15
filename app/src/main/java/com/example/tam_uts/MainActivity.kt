@@ -39,14 +39,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp() {
-    // Navigasi state
     var currentPage by rememberSaveable { mutableStateOf(Page.LOGIN) }
     var previousPage by rememberSaveable { mutableStateOf(Page.HOME) }
-    
-    // State User agar perubahan profil langsung terlihat di UI
     var userState by remember { mutableStateOf(DummyData.dummyUser) }
-    
-    // State Resep Detail
     var selectedRecipe by remember { mutableStateOf(DummyData.dummyRecipes[0]) }
 
     val navigateToDetail: (Recipe) -> Unit = { recipe ->
@@ -75,7 +70,6 @@ fun MainApp() {
                 .background(Color.White)
         ) {
             when (currentPage) {
-                // Auth
                 Page.LOGIN -> LoginScreen(
                     onLoginSuccess = { currentPage = Page.HOME },
                     onNavigateToRegister = { currentPage = Page.REGISTER }
@@ -84,8 +78,6 @@ fun MainApp() {
                     onRegisterSuccess = { currentPage = Page.HOME },
                     onNavigateToLogin = { currentPage = Page.LOGIN }
                 )
-                
-                // Tabs
                 Page.HOME -> HomeScreen(
                     onRecipeClick = navigateToDetail,
                     onNavClick = { currentPage = Page.REGIONS }
@@ -98,8 +90,6 @@ fun MainApp() {
                     user = userState,
                     onNavigate = { currentPage = it }
                 )
-
-                // Sub-pages
                 Page.DETAIL -> RecipeDetailScreen(
                     recipe = selectedRecipe,
                     onBack = { currentPage = previousPage }
@@ -121,7 +111,7 @@ fun MainApp() {
 
 @Composable
 fun BottomNavigationBar(currentPage: Page, onPageSelected: (Page) -> Unit) {
-    NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
+    NavigationBar(containerColor = Color.White, tonalElevation = 0.dp) {
         val items = listOf(
             Triple(Page.HOME,      Icons.Default.Home,   "Home"),
             Triple(Page.REGIONS,   Icons.Default.Place,  "Wilayah"),

@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
 
-// ── Enum kekuatan password ────────────────────────────────────────────────────
 private enum class PasswordStrength(val label: String, val color: Color, val filledBars: Int) {
     EMPTY("", Color.Transparent, 0),
     WEAK("Lemah", Color(0xFFE53935), 1),
@@ -56,7 +55,6 @@ private fun evaluatePassword(password: String): PasswordStrength {
     }
 }
 
-// ── Composable utama ──────────────────────────────────────────────────────────
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
@@ -77,8 +75,6 @@ fun RegisterScreen(
     val strength = evaluatePassword(password)
 
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-
-        // ── Hero ──────────────────────────────────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,7 +83,6 @@ fun RegisterScreen(
                 .padding(top = 40.dp, bottom = 28.dp)
         ) {
             Column {
-                // Tombol kembali
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
@@ -143,7 +138,6 @@ fun RegisterScreen(
         }
 
         Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 24.dp)) {
-
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Column(modifier = Modifier.weight(1f)) {
                     RegisterFieldLabel("Nama Depan")
@@ -189,7 +183,6 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Password + strength indicator
             RegisterFieldLabel("Password")
             RegisterTextField(
                 value = password,
