@@ -2,6 +2,7 @@ package com.example.tam_uts
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainApp()
+                    MainApp(onExitApp = { moveTaskToBack(true) })
                 }
             }
         }
@@ -38,28 +39,50 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainApp() {
+fun MainApp(onExitApp: () -> Unit = {}) {
     var currentPage by rememberSaveable { mutableStateOf(Page.LOGIN) }
-    var previousPage by rememberSaveable { mutableStateOf(Page.HOME) }
     var userState by remember { mutableStateOf(DummyData.dummyUser) }
     var selectedRecipe by remember { mutableStateOf(DummyData.dummyRecipes[0]) }
 
-    val navigateToDetail: (Recipe) -> Unit = { recipe ->
-        selectedRecipe = recipe
-        previousPage = currentPage
-        currentPage = Page.DETAIL
-    }
+    val backStack = remember { mutableStateListOf<Page>() }
 
     val mainTabs = listOf(
         Page.HOME, Page.REGIONS, Page.SEARCH,
         Page.ADD, Page.BOOKMARKS, Page.PROFILE
     )
 
+    fun navigateTo(page: Page) {
+        backStack.add(currentPage)
+        currentPage = page
+    }
+
+    val navigateToDetail: (Recipe) -> Unit = { recipe ->
+        selectedRecipe = recipe
+        navigateTo(Page.DETAIL)
+    }
+
+    BackHandler(enabled = true) {
+        when {
+            backStack.isNotEmpty() -> {
+                currentPage = backStack.removeLast()
+            }
+            currentPage in mainTabs && currentPage != Page.HOME -> {
+                currentPage = Page.HOME
+            }
+            else -> {
+                onExitApp()
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             if (currentPage in mainTabs) {
-                BottomNavigationBar(currentPage = currentPage) { currentPage = it }
+                BottomNavigationBar(currentPage = currentPage) { page ->
+                    backStack.clear()
+                    currentPage = page
+                }
             }
         }
     ) { innerPadding ->
@@ -71,28 +94,37 @@ fun MainApp() {
         ) {
             when (currentPage) {
                 Page.LOGIN -> LoginScreen(
-                    onLoginSuccess = { currentPage = Page.HOME },
-                    onNavigateToRegister = { currentPage = Page.REGISTER }
+                    onLoginSuccess = {
+                        backStack.clear()
+                        currentPage = Page.HOME
+                    },
+                    onNavigateToRegister = { navigateTo(Page.REGISTER) }
                 )
                 Page.REGISTER -> RegisterScreen(
-                    onRegisterSuccess = { currentPage = Page.HOME },
-                    onNavigateToLogin = { currentPage = Page.LOGIN }
+                    onRegisterSuccess = {
+                        backStack.clear()
+                        currentPage = Page.HOME
+                    },
+                    onNavigateToLogin = { currentPage = backStack.removeLastOrNull() ?: Page.LOGIN }
                 )
                 Page.HOME -> HomeScreen(
                     onRecipeClick = navigateToDetail,
-                    onNavClick = { currentPage = Page.REGIONS }
+                    onNavClick = { navigateTo(Page.REGIONS) }
                 )
                 Page.REGIONS -> RegionsScreen(onRecipeClick = navigateToDetail)
                 Page.SEARCH  -> SearchScreen(onRecipeClick = navigateToDetail)
-                Page.ADD     -> AddRecipeScreen(onAddSuccess = { currentPage = Page.HOME })
+                Page.ADD     -> AddRecipeScreen(onAddSuccess = {
+                    backStack.clear()
+                    currentPage = Page.HOME
+                })
                 Page.BOOKMARKS -> BookmarksScreen(onRecipeClick = navigateToDetail)
                 Page.PROFILE -> ProfileScreen(
                     user = userState,
-                    onNavigate = { currentPage = it }
+                    onNavigate = { navigateTo(it) }
                 )
                 Page.DETAIL -> RecipeDetailScreen(
                     recipe = selectedRecipe,
-                    onBack = { currentPage = previousPage }
+                    onBack = { currentPage = backStack.removeLastOrNull() ?: Page.HOME }
                 )
                 Page.EDIT_PROFILE -> EditProfileScreen(
                     user = userState,
@@ -100,10 +132,14 @@ fun MainApp() {
                         userState = updatedUser
                         DummyData.dummyUser = userState
                     },
-                    onBack = { currentPage = Page.PROFILE }
+                    onBack = { currentPage = backStack.removeLastOrNull() ?: Page.PROFILE }
                 )
-                Page.NOTIFICATIONS -> NotificationScreen(onBack = { currentPage = Page.PROFILE })
-                Page.SETTINGS -> SettingsScreen(onBack = { currentPage = Page.PROFILE })
+                Page.NOTIFICATIONS -> NotificationScreen(
+                    onBack = { currentPage = backStack.removeLastOrNull() ?: Page.PROFILE }
+                )
+                Page.SETTINGS -> SettingsScreen(
+                    onBack = { currentPage = backStack.removeLastOrNull() ?: Page.PROFILE }
+                )
             }
         }
     }
