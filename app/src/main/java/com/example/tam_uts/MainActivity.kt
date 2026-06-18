@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -44,26 +43,17 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainApp(onExitApp: () -> Unit = {}) {
     val authViewModel: AuthViewModel = viewModel()
-    val currentFirebaseUser by authViewModel.currentUser.collectAsState()
-
-    val startPage = if (authViewModel.isLoggedIn()) Page.HOME else Page.LOGIN
-
-    var currentPage by rememberSaveable { mutableStateOf(startPage) }
-    var userState by remember { mutableStateOf(DummyData.dummyUser) }
+    val currentUser by authViewModel.currentUser.collectAsState()
+    
+    var currentPage by rememberSaveable { mutableStateOf(if (authViewModel.isLoggedIn()) Page.HOME else Page.LOGIN) }
     var selectedRecipe by remember { mutableStateOf(DummyData.dummyRecipes[0]) }
 
     val backStack = remember { mutableStateListOf<Page>() }
 
     val mainTabs = listOf(
         Page.HOME, Page.REGIONS, Page.SEARCH,
-        Page.ADD, Page.BOOKMARKS, Page.PROFILE
+        Page.BOOKMARKS, Page.PROFILE
     )
-
-    LaunchedEffect(currentFirebaseUser) {
-        currentFirebaseUser?.let { firestoreUser ->
-            userState = firestoreUser
-        }
-    }
 
     fun navigateTo(page: Page) {
         backStack.add(currentPage)
@@ -112,18 +102,14 @@ fun MainApp(onExitApp: () -> Unit = {}) {
                         backStack.clear()
                         currentPage = Page.HOME
                     },
-                    onNavigateToRegister = { navigateTo(Page.REGISTER) },
-                    authViewModel = authViewModel
+                    onNavigateToRegister = { navigateTo(Page.REGISTER) }
                 )
                 Page.REGISTER -> RegisterScreen(
                     onRegisterSuccess = {
                         backStack.clear()
                         currentPage = Page.HOME
                     },
-                    onNavigateToLogin = {
-                        currentPage = backStack.removeLastOrNull() ?: Page.LOGIN
-                    },
-                    authViewModel = authViewModel
+                    onNavigateToLogin = { currentPage = backStack.removeLastOrNull() ?: Page.LOGIN }
                 )
                 Page.HOME -> HomeScreen(
                     onRecipeClick = navigateToDetail,
@@ -131,13 +117,9 @@ fun MainApp(onExitApp: () -> Unit = {}) {
                 )
                 Page.REGIONS -> RegionsScreen(onRecipeClick = navigateToDetail)
                 Page.SEARCH  -> SearchScreen(onRecipeClick = navigateToDetail)
-                Page.ADD     -> AddRecipeScreen(onAddSuccess = {
-                    backStack.clear()
-                    currentPage = Page.HOME
-                })
                 Page.BOOKMARKS -> BookmarksScreen(onRecipeClick = navigateToDetail)
                 Page.PROFILE -> ProfileScreen(
-                    user = userState,
+                    user = currentUser ?: DummyData.dummyUser,
                     onNavigate = { navigateTo(it) },
                     onLogout = {
                         authViewModel.logout()
@@ -150,10 +132,9 @@ fun MainApp(onExitApp: () -> Unit = {}) {
                     onBack = { currentPage = backStack.removeLastOrNull() ?: Page.HOME }
                 )
                 Page.EDIT_PROFILE -> EditProfileScreen(
-                    user = userState,
+                    user = currentUser ?: DummyData.dummyUser,
                     onSave = { updatedUser ->
-                        userState = updatedUser
-                        DummyData.dummyUser = userState
+                        authViewModel.updateUserProfile(updatedUser)
                     },
                     onBack = { currentPage = backStack.removeLastOrNull() ?: Page.PROFILE }
                 )
@@ -175,7 +156,6 @@ fun BottomNavigationBar(currentPage: Page, onPageSelected: (Page) -> Unit) {
             Triple(Page.HOME,      Icons.Default.Home,   "Home"),
             Triple(Page.REGIONS,   Icons.Default.Place,  "Wilayah"),
             Triple(Page.SEARCH,    Icons.Default.Search, "Cari"),
-            Triple(Page.ADD,       Icons.Default.Add,    "Tambah"),
             Triple(Page.BOOKMARKS, Icons.Default.Star,   "Simpan"),
             Triple(Page.PROFILE,   Icons.Default.Person, "Profil")
         )

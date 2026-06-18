@@ -152,4 +152,20 @@ class AuthViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateUserProfile(updatedUser: User) {
+        val uid = authRepository.currentUser?.uid ?: return
+        viewModelScope.launch {
+            _uiState.value = AuthUiState.Loading
+            val result = userRepository.updateUserProfile(uid, updatedUser)
+            if (result.isSuccess) {
+                _currentUser.value = updatedUser
+                _uiState.value = AuthUiState.Success(updatedUser)
+            } else {
+                _uiState.value = AuthUiState.Error(
+                    result.exceptionOrNull()?.message ?: "Gagal memperbarui profil."
+                )
+            }
+        }
+    }
 }

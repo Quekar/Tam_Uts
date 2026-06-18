@@ -10,6 +10,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -41,24 +43,46 @@ fun ScreenHeader(title: String, onBack: () -> Unit) {
 }
 
 @Composable
-fun RecipeCard(recipe: Recipe, onClick: () -> Unit) {
+fun RecipeCard(
+    recipe: Recipe,
+    isBookmarked: Boolean = false,
+    onBookmarkClick: () -> Unit = {},
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .width(160.dp)
-            .height(200.dp)
+            .height(210.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
-            AsyncImage(
-                model = recipe.imageUrl,
-                contentDescription = recipe.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentScale = ContentScale.Crop
-            )
+            Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                AsyncImage(
+                    model = recipe.imageUrl,
+                    contentDescription = recipe.name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                Surface(
+                    modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
+                    color = Color.White.copy(alpha = 0.8f),
+                    shape = CircleShape
+                ) {
+                    IconButton(
+                        onClick = { onBookmarkClick() },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                            contentDescription = "Simpan",
+                            tint = Orange500,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+            }
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(recipe.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1)
                 Text(recipe.origin, fontSize = 10.sp, color = Orange500)
@@ -79,7 +103,12 @@ fun RegionListItem(origin: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun BookmarkRecipeItem(recipe: Recipe, onClick: () -> Unit) {
+fun BookmarkRecipeItem(
+    recipe: Recipe,
+    isBookmarked: Boolean = true,
+    onBookmarkClick: () -> Unit = {},
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,23 +130,15 @@ fun BookmarkRecipeItem(recipe: Recipe, onClick: () -> Unit) {
                 Text(recipe.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Text(recipe.origin, fontSize = 12.sp, color = Orange500)
             }
+            IconButton(onClick = onBookmarkClick) {
+                Icon(
+                    imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                    contentDescription = "Bookmark",
+                    tint = if (isBookmarked) Orange500 else Color.Gray
+                )
+            }
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
         }
-    }
-}
-
-@Composable
-fun AddRecipeField(label: String, value: String, onValueChange: (String) -> Unit, placeholder: String, modifier: Modifier = Modifier, trailingIcon: ImageVector? = null) {
-    Column(modifier = Modifier.padding(bottom = 16.dp)) {
-        Text(label, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = value, onValueChange = onValueChange, placeholder = { Text(placeholder, color = Color.Gray) },
-            trailingIcon = { if (trailingIcon != null) Icon(imageVector = trailingIcon, contentDescription = null, tint = Color.Gray) },
-            modifier = modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Orange500, unfocusedBorderColor = Color.LightGray, focusedContainerColor = LightGray, unfocusedContainerColor = LightGray),
-            shape = RoundedCornerShape(8.dp)
-        )
     }
 }
 

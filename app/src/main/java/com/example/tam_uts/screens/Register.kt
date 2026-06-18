@@ -83,7 +83,7 @@ fun RegisterScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is AuthUiState.Success -> {
-                Toast.makeText(context, "Akun berhasil dibuat! Selamat datang 🎉", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Akun berhasil dibuat!", Toast.LENGTH_SHORT).show()
                 authViewModel.resetState()
                 onRegisterSuccess()
             }
@@ -132,7 +132,7 @@ fun RegisterScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    "Bergabung sekarang ✨",
+                    "Bergabung sekarang",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White.copy(alpha = 0.85f)
@@ -145,21 +145,6 @@ fun RegisterScreen(
                     color = Color.White,
                     lineHeight = 28.sp
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    StepIndicator(active = true)
-                    Spacer(modifier = Modifier.width(6.dp))
-                    StepIndicator(active = false)
-                    Spacer(modifier = Modifier.width(6.dp))
-                    StepIndicator(active = false)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        "Langkah 1 dari 3",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White.copy(alpha = 0.75f)
-                    )
-                }
             }
         }
 
@@ -283,50 +268,23 @@ fun RegisterScreen(
                 },
                 isError = confirmPass.isNotEmpty() && confirmPass != password
             )
-            if (confirmPass.isNotEmpty() && confirmPass != password) {
-                Text(
-                    "Password tidak cocok",
-                    fontSize = 11.sp,
-                    color = Color(0xFFE53935),
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                verticalAlignment = Alignment.Top,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(if (agreedTerms) Orange500 else Color.Transparent)
-                        .border(
-                            1.5.dp,
-                            if (agreedTerms) Orange500 else Color.LightGray,
-                            RoundedCornerShape(4.dp)
-                        )
-                        .clickable(enabled = !isLoading) { agreedTerms = !agreedTerms },
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (agreedTerms) {
-                        Icon(
-                            Icons.Default.Check,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(13.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.width(10.dp))
+                Checkbox(
+                    checked = agreedTerms,
+                    onCheckedChange = { agreedTerms = it },
+                    enabled = !isLoading,
+                    colors = CheckboxDefaults.colors(checkedColor = Orange500)
+                )
                 Text(
-                    "Saya setuju dengan Syarat & Ketentuan dan Kebijakan Privasi TasteMap",
-                    fontSize = 11.sp,
-                    color = Color.Gray,
-                    fontWeight = FontWeight.SemiBold,
-                    lineHeight = 17.sp
+                    "Saya setuju dengan Syarat & Ketentuan",
+                    fontSize = 12.sp,
+                    color = Color.Gray
                 )
             }
 
@@ -348,106 +306,31 @@ fun RegisterScreen(
                     )
                 },
                 enabled = !isLoading,
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Orange500),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        color = Color.White,
-                        strokeWidth = 2.dp
-                    )
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White)
                 } else {
-                    Icon(
-                        Icons.Default.Person,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        "Buat Akun",
-                        color = Color.White,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
+                    Text("Daftar Sekarang", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-                Text(
-                    "  atau daftar dengan  ",
-                    fontSize = 11.sp,
-                    color = Color.LightGray,
-                    fontWeight = FontWeight.SemiBold
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedButton(
-                onClick = {
-                    Toast.makeText(context, "Daftar dengan Google segera hadir!", Toast.LENGTH_SHORT).show()
-                },
-                enabled = !isLoading,
-                modifier = Modifier.fillMaxWidth().height(46.dp),
-                shape = RoundedCornerShape(12.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.DarkGray)
-            ) {
-                Text("🔍", fontSize = 15.sp)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    "Lanjutkan dengan Google",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.DarkGray
-                )
-            }
-
-            Spacer(modifier = Modifier.height(22.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "Sudah punya akun? ",
-                    fontSize = 12.sp,
-                    color = Color.Gray,
-                    fontWeight = FontWeight.SemiBold
-                )
-                TextButton(
-                    onClick = onNavigateToLogin,
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Text(
-                        "Masuk di sini",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Orange500
-                    )
+                Text("Sudah punya akun? ", fontSize = 14.sp, color = Color.Gray)
+                TextButton(onClick = onNavigateToLogin) {
+                    Text("Masuk di sini", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Orange500)
                 }
             }
         }
     }
-}
-
-@Composable
-private fun StepIndicator(active: Boolean) {
-    Box(
-        modifier = Modifier
-            .width(if (active) 40.dp else 24.dp)
-            .height(5.dp)
-            .clip(RoundedCornerShape(3.dp))
-            .background(if (active) Color.White else Color.White.copy(alpha = 0.35f))
-    )
 }
 
 @Composable
@@ -489,12 +372,9 @@ private fun RegisterTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Orange500,
             unfocusedBorderColor = Color.Transparent,
-            errorBorderColor = Color(0xFFE53935),
             focusedContainerColor = LightGray,
-            unfocusedContainerColor = LightGray,
-            errorContainerColor = Color(0xFFFFF0F0)
-        ),
-        textStyle = LocalTextStyle.current.copy(fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+            unfocusedContainerColor = LightGray
+        )
     )
 }
 

@@ -2,44 +2,102 @@ package com.example.tam_uts.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tam_uts.components.BookmarkRecipeItem
 import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
-import com.example.tam_uts.components.RegionListItem
-import com.example.tam_uts.data.DummyData
 import com.example.tam_uts.data.Recipe
+import com.example.tam_uts.viewmodel.RecipeViewModel
 
 @Composable
-fun RegionsScreen(onRecipeClick: (Recipe) -> Unit) {
-    var selectedFilter by remember { mutableStateOf("Indonesia") }
+fun RegionsScreen(
+    onRecipeClick: (Recipe) -> Unit,
+    recipeViewModel: RecipeViewModel = viewModel()
+) {
+    val cuisines = listOf(
+        "Indonesian", "Italian", "Japanese", "Thai", 
+        "Korean", "Chinese", "Mexican", "French", "Indian", "American"
+    )
+    
+    var selectedFilter by remember { mutableStateOf(cuisines[0]) }
+    val apiRecipes by recipeViewModel.recipes.collectAsState()
+    val isLoading by recipeViewModel.isLoading.collectAsState()
+
+    // Memuat data dari API setiap kali filter berubah
+    LaunchedEffect(selectedFilter) {
+        recipeViewModel.searchRecipes(cuisine = selectedFilter)
+    }
+
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Explore Kategori Wilayah", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(
-                onClick = { selectedFilter = "Indonesia" },
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = if (selectedFilter == "Indonesia") Orange500 else LightGray, contentColor = if (selectedFilter == "Indonesia") Color.White else Orange500)
-            ) { Text("Indonesia") }
-            Button(
-                onClick = { selectedFilter = "Internasional" },
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = if (selectedFilter == "Internasional") Orange500 else LightGray, contentColor = if (selectedFilter == "Internasional") Color.White else Orange500)
-            ) { Text("Internasional") }
+        Text("Eksplorasi Wilayah", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+        Text("Temukan masakan khas dari berbagai belahan dunia", fontSize = 14.sp, color = Color.Gray)
+        
+        Spacer(modifier = Modifier.height(20.dp))
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(bottom = 8.dp)
+        ) {
+            items(cuisines) { cuisine ->
+                val isSelected = selectedFilter == cuisine
+                val displayName = if (cuisine == "Indonesian") "Indonesia" else cuisine
+                Button(
+                    onClick = { selectedFilter = cuisine },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSelected) Orange500 else LightGray,
+                        contentColor = if (isSelected) Color.White else Orange500
+                    ),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text(text = displayName)
+                }
+            }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn {
-            val filteredOrigins = DummyData.dummyRecipes.filter { it.regionCategory == selectedFilter }.map { it.origin }.distinct()
-            items(filteredOrigins) { origin ->
-                val originRecipe = DummyData.dummyRecipes.firstOrNull { it.origin == origin }
-                RegionListItem(origin = origin, onClick = { if (originRecipe != null) onRecipeClick(originRecipe) })
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = Orange500)
+            }
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (apiRecipes.isEmpty()) {
+                    item {
+                        Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("Tidak ada resep ditemukan.", color = Color.Gray)
+                        }
+                    }
+                } else {
+                    items(apiRecipes) { apiRecipe ->
+                        // Konversi data API ke model Recipe untuk ditampilkan
+                        val recipe = Recipe(
+                            id = apiRecipe.id,
+                            name = apiRecipe.title,
+                            origin = if (selectedFilter == "Indonesian") "Indonesia" else selectedFilter,
+                            imageUrl = apiRecipe.image,
+                            description = "Masakan khas $selectedFilter",
+                            ingredients = emptyList(),
+                            instructions = emptyList()
+                        )
+                        BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
+                    }
+                }
             }
         }
     }

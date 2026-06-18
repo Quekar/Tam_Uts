@@ -21,7 +21,7 @@ data class User(
 
 enum class Page {
     LOGIN, REGISTER,
-    HOME, REGIONS, SEARCH, DETAIL, ADD, BOOKMARKS, PROFILE,
+    HOME, REGIONS, SEARCH, DETAIL, BOOKMARKS, PROFILE,
     EDIT_PROFILE, NOTIFICATIONS, SETTINGS
 }
 
@@ -112,18 +112,18 @@ object DummyData {
             name = "Pendap",
             origin = "Bengkulu",
             imageUrl = "https://images.unsplash.com/photo-1519984388953-d2406bc725e1?auto=format&fit=crop&q=80&w=1000",
-            description = "Ikan yang dibumbui dengan aneka rempah dan kelapa parut, lalu dibungkus daun talas dan dikukus lama.",
+            description = "Ikan yang dibumbui with aneka rempah and kelapa parut, lalu dibungkus daun talas and dikukus lama.",
             ingredients = listOf("Ikan 500g", "Kelapa parut 1 butir", "Daun talas", "Daun pisang", "Kunyit", "Jahe", "Cabai merah"),
-            instructions = listOf("Haluskan bumbu, campur dengan kelapa parut.", "Lumuri ikan dengan campuran kelapa.", "Bungkus dengan daun talas, lalu bungkus lagi dengan daun pisang.", "Kukus selama minimal 8 jam.")
+            instructions = listOf("Haluskan bumbu, campur with kelapa parut.", "Lumuri ikan with campuran kelapa.", "Bungkus with daun talas, lalu bungkus lagi with daun pisang.", "Kukus selama minimal 8 jam.")
         ),
         Recipe(
             id = 10,
             name = "Seruit",
             origin = "Lampung",
             imageUrl = "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80&w=1000",
-            description = "Masakan ikan goreng atau bakar yang diaduk dengan sambal terasi, tempoyak, atau mangga.",
+            description = "Masakan ikan goreng atau bakar yang diaduk with sambal terasi, tempoyak, atau mangga.",
             ingredients = listOf("Ikan sungai 500g", "Sambal terasi", "Tempoyak", "Mangga muda iris", "Lalapan"),
-            instructions = listOf("Bakar atau goreng ikan hingga matang.", "Campur sambal terasi, tempoyak, and mangga iris.", "Penyet ikan di atas sambal.", "Sajikan dengan nasi hangat dan lalapan.")
+            instructions = listOf("Bakar atau goreng ikan hingga matang.", "Campur sambal terasi, tempoyak, and mangga iris.", "Penyet ikan di atas sambal.", "Sajikan with nasi hangat and lalapan.")
         ),
         Recipe(
             id = 11,
@@ -132,16 +132,16 @@ object DummyData {
             imageUrl = "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&q=80&w=1000",
             description = "Makanan khas Betawi yang terbuat dari beras ketan, telur, and serundeng.",
             ingredients = listOf("Beras ketan 100g", "Telur bebek 1 butir", "Ebi", "Serundeng", "Bawang goreng"),
-            instructions = listOf("Panaskan wajan, masukkan ketan dan air sedikit.", "Masukkan telur, ebi, and bumbu.", "Ratakan dan balik wajan di atas api hingga matang/kering.")
+            instructions = listOf("Panaskan wajan, masukkan ketan and air sedikit.", "Masukkan telur, ebi, and bumbu.", "Ratakan and balik wajan di atas api hingga matang/kering.")
         ),
         Recipe(
             id = 12,
             name = "Surabi",
             origin = "Jawa Barat",
             imageUrl = "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&q=80&w=1000",
-            description = "Kue tradisional Sunda yang terbuat dari tepung beras dan santan, dimasak di atas cetakan tanah liat.",
+            description = "Kue tradisional Sunda yang terbuat dari tepung beras and santan, dimasak di atas cetakan tanah liat.",
             ingredients = listOf("Tepung beras 250g", "Santan 500ml", "Kelapa parut", "Garam", "Gula merah (untuk kuah kinca)"),
-            instructions = listOf("Campur tepung beras, santan, and kelapa parut.", "Tuang adonan ke cetakan tanah liat yang sudah panas.", "Tutup dan masak hingga matang.", "Sajikan dengan kuah kinca.")
+            instructions = listOf("Campur tepung beras, santan, and kelapa parut.", "Tuang adonan ke cetakan tanah liat yang sudah panas.", "Tutup and masak hingga matang.", "Sajikan with kuah kinca.")
         ),
         Recipe(
             id = 13,
@@ -150,14 +150,14 @@ object DummyData {
             imageUrl = "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&q=80&w=1000",
             description = "Ikan bandeng yang dagingnya dikeluarkan, dicampur bumbu, dimasukkan kembali, lalu dibakar.",
             ingredients = listOf("Ikan bandeng 1 ekor", "Santan kental", "Telur 1 butir", "Bawang merah & putih", "Ketumbar", "Jintan"),
-            instructions = listOf("Pukul-pukul ikan bandeng, keluarkan daging and durinya.", "Haluskan daging ikan dan campur dengan bumbu, telur, and santan.", "Masukkan kembali ke dalam kulit ikan.", "Jepit dengan bambu and bakar hingga matang.")
+            instructions = listOf("Pukul-pukul ikan bandeng, keluarkan daging and durinya.", "Haluskan daging ikan and campur with bumbu, telur, and santan.", "Masukkan kembali ke dalam kulit ikan.", "Jepit with bambu and bakar hingga matang.")
         ),
         Recipe(
             id = 14,
             name = "Lumpia",
             origin = "Jawa Tengah",
             imageUrl = "https://images.unsplash.com/photo-1562802378-063ec186a863?auto=format&fit=crop&q=80&w=1000",
-            description = "Jajanan khas Semarang berupa lembaran tipis tepung gandum yang diisi rebung, telur, dan daging.",
+            description = "Jajanan khas Semarang berupa lembaran tipis tepung gandum yang diisi rebung, telur, and daging.",
             ingredients = listOf("Kulit lumpia", "Rebung iris 250g", "Daging ayam cincang 100g", "Udang 100g", "Telur 2 butir", "Bawang putih"),
             instructions = listOf("Tumis bawang putih, masukkan ayam and udang.", "Masukkan rebung and bumbu, masak hingga kering.", "Letakkan isi di atas kulit lumpia, lipat and gulung.", "Goreng hingga kecokelatan.")
         ),
@@ -166,9 +166,9 @@ object DummyData {
             name = "Gudeg",
             origin = "DI Yogyakarta",
             imageUrl = "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&q=80&w=1000",
-            description = "Makanan khas Yogyakarta yang terbuat dari nangka muda yang dimasak dengan santan.",
+            description = "Makanan khas Yogyakarta yang terbuat dari nangka muda yang dimasak with santan.",
             ingredients = listOf("Nangka muda 1kg", "Santan 1.5L", "Gula merah 200g", "Daun jati (untuk warna)", "Bawang merah & putih", "Ketumbar"),
-            instructions = listOf("Masukkan nangka muda, santan, bumbu halus, and gula merah ke panci.", "Masak dengan api kecil selama beberapa jam hingga santan meresap and nangka empuk.", "Sajikan dengan krecek and ayam opor.")
+            instructions = listOf("Masukkan nangka muda, santan, bumbu halus, and gula merah ke panci.", "Masak with api kecil selama beberapa jam hingga santan meresap and nangka empuk.", "Sajikan with krecek and ayam opor.")
         ),
         Recipe(
             id = 16,
@@ -184,25 +184,25 @@ object DummyData {
             name = "Ayam Betutu",
             origin = "Bali",
             imageUrl = "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&q=80&w=1000",
-            description = "Ayam yang diisi dengan bumbu base genep dan dibungkus daun pisang lalu dikukus atau dibakar.",
+            description = "Ayam yang diisi with bumbu base genep and dibungkus daun pisang lalu dikukus atau dibakar.",
             ingredients = listOf("Ayam utuh 1 ekor", "Bumbu Base Genep (Lengkuas, Kunyit, Jahe, Kencur, Bawang, Cabai)", "Daun pisang"),
-            instructions = listOf("Lumuri ayam dengan bumbu base genep secara merata.", "Bungkus dengan daun pisang.", "Kukus selama 2-3 jam atau hingga daging empuk and bumbu meresap.")
+            instructions = listOf("Lumuri ayam with bumbu base genep secara merata.", "Bungkus with daun pisang.", "Kukus selama 2-3 jam atau hingga daging empuk and bumbu meresap.")
         ),
         Recipe(
             id = 18,
             name = "Ayam Taliwang",
             origin = "Nusa Tenggara Barat",
             imageUrl = "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&q=80&w=1000",
-            description = "Ayam bakar khas Lombok dengan bumbu pedas yang menggugah selera.",
+            description = "Ayam bakar khas Lombok with bumbu pedas yang menggugah selera.",
             ingredients = listOf("Ayam kampung 1 ekor", "Cabai merah & rawit", "Bawang merah & putih", "Terasi bakar", "Kencur", "Gula merah"),
-            instructions = listOf("Bakar ayam setengah matang.", "Haluskan bumbu and tumis.", "Lumuri ayam dengan bumbu lalu bakar kembali hingga matang sempurna.")
+            instructions = listOf("Bakar ayam setengah matang.", "Haluskan bumbu and tumis.", "Lumuri ayam with bumbu lalu bakar kembali hingga matang sempurna.")
         ),
         Recipe(
             id = 19,
             name = "Se'i Sapi",
             origin = "Nusa Tenggara Timur",
             imageUrl = "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&q=80&w=1000",
-            description = "Daging sapi yang dimasak dengan cara diasap menggunakan kayu kosambi.",
+            description = "Daging sapi yang dimasak with cara diasap menggunakan kayu kosambi.",
             ingredients = listOf("Daging sapi has dalam 1kg", "Garam", "Lada", "Kayu kosambi (untuk pengasapan)"),
             instructions = listOf("Iris daging memanjang, lumuri garam and lada.", "Diamkan sejenak.", "Asapi daging di atas bara api kayu kosambi hingga matang and beraroma asap.")
         ),
@@ -211,7 +211,7 @@ object DummyData {
             name = "Bubur Pedas",
             origin = "Kalimantan Barat",
             imageUrl = "https://images.unsplash.com/photo-1476224203421-9ac39bcb3b27?auto=format&fit=crop&q=80&w=1000",
-            description = "Bubur tradisional Kalimantan Barat yang berisi aneka sayuran dan bumbu rempah.",
+            description = "Bubur tradisional Kalimantan Barat yang berisi aneka sayuran and bumbu rempah.",
             ingredients = listOf("Beras 250g", "Kelapa parut sangrai", "Kangkung", "Pakis", "Wortel", "Jagung", "Kacang tanah goreng"),
             instructions = listOf("Sangrai beras and tumbuk halus.", "Rebus air, masukkan beras tumbuk.", "Masukkan sayuran and bumbu halus.", "Masak hingga menjadi bubur kental.")
         ),
@@ -229,18 +229,18 @@ object DummyData {
             name = "Soto Banjar",
             origin = "Kalimantan Selatan",
             imageUrl = "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&q=80&w=1000",
-            description = "Soto khas suku Banjar dengan kuah bening atau sedikit keruh karena tambahan susu/telur.",
+            description = "Soto khas suku Banjar with kuah bening atau sedikit keruh karena tambahan susu/telur.",
             ingredients = listOf("Ayam kampung 1 ekor", "Bawang merah & putih", "Kayu manis", "Cengkeh", "Pala", "Ketupat", "Perkedel kentang"),
-            instructions = listOf("Rebus ayam dengan rempah (kayu manis, cengkeh, pala) hingga empuk.", "Suwir daging ayam.", "Tumis bumbu halus and masukkan ke kuah rebusan.", "Sajikan dengan ketupat, suwiran ayam, and perkedel.")
+            instructions = listOf("Rebus ayam with rempah (kayu manis, cengkeh, pala) hingga empuk.", "Suwir daging ayam.", "Tumis bumbu halus and masukkan ke kuah rebusan.", "Sajikan with ketupat, suwiran ayam, and perkedel.")
         ),
         Recipe(
             id = 23,
             name = "Nasi Kuning Samarinda",
             origin = "Kalimantan Timur",
             imageUrl = "https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&q=80&w=1000",
-            description = "Nasi kuning khas Samarinda yang biasanya disajikan dengan ikan haruan masak habang.",
+            description = "Nasi kuning khas Samarinda yang biasanya disajikan with ikan haruan masak habang.",
             ingredients = listOf("Beras 500g", "Santan 750ml", "Kunyit", "Serai", "Daun salam", "Ikan haruan (gabus)", "Bumbu masak habang"),
-            instructions = listOf("Masak beras dengan santan, kunyit, and rempah hingga menjadi nasi kuning.", "Masak ikan haruan dengan bumbu masak habang (cabai kering).", "Sajikan nasi kuning dengan ikan and pelengkap lainnya.")
+            instructions = listOf("Masak beras with santan, kunyit, and rempah hingga menjadi nasi kuning.", "Masak ikan haruan with bumbu masak habang (cabai kering).", "Sajikan nasi kuning with ikan and pelengkap lainnya.")
         ),
         Recipe(
             id = 24,
@@ -249,23 +249,23 @@ object DummyData {
             imageUrl = "https://images.unsplash.com/photo-1559715745-e1b33a271c8f?auto=format&fit=crop&q=80&w=1000",
             description = "Kepiting cangkang lunak yang bisa dimakan seluruh bagian tubuhnya, biasanya digoreng tepung.",
             ingredients = listOf("Kepiting soka 4 ekor", "Tepung bumbu serbaguna", "Telur 1 butir", "Minyak goreng"),
-            instructions = listOf("Bersihkan kepiting soka.", "Celupkan ke telur kocok, lalu gulingkan ke tepung bumbu.", "Goreng dalam minyak panas hingga renyah.", "Sajikan dengan saus asam manis.")
+            instructions = listOf("Bersihkan kepiting soka.", "Celupkan ke telur kocok, lalu gulingkan ke tepung bumbu.", "Goreng dalam minyak panas hingga renyah.", "Sajikan with saus asam manis.")
         ),
         Recipe(
             id = 25,
             name = "Tinutuan",
             origin = "Sulawesi Utara",
             imageUrl = "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&q=80&w=1000",
-            description = "Bubur Manado yang kaya akan sayuran seperti labu kuning, bayam, kangkung, dan jagung.",
+            description = "Bubur Manado yang kaya akan sayuran seperti labu kuning, bayam, kangkung, and jagung.",
             ingredients = listOf("Beras 200g", "Labu kuning 200g", "Jagung manis", "Bayam", "Kangkung", "Daun kemangi"),
-            instructions = listOf("Masak beras and labu kuning hingga menjadi bubur.", "Masukkan jagung and sayuran lainnya.", "Tambahkan garam and kemangi.", "Sajikan dengan ikan asin and sambal roa.")
+            instructions = listOf("Masak beras and labu kuning hingga menjadi bubur.", "Masukkan jagung and sayuran lainnya.", "Tambahkan garam and kemangi.", "Sajikan with ikan asin and sambal roa.")
         ),
         Recipe(
             id = 26,
             name = "Binte Biluhuta",
             origin = "Gorontalo",
             imageUrl = "https://images.unsplash.com/photo-1588765566399-8d80aeec6cf5?auto=format&fit=crop&q=80&w=1000",
-            description = "Sup jagung manis khas Gorontalo dengan campuran udang atau ikan cakalang suwir.",
+            description = "Sup jagung manis khas Gorontalo with campuran udang atau ikan cakalang suwir.",
             ingredients = listOf("Jagung manis pipil 500g", "Udang/Ikan cakalang", "Kelapa parut", "Bawang merah & putih", "Cabai rawit", "Jeruk nipis"),
             instructions = listOf("Rebus jagung hingga matang.", "Masukkan udang/ikan and bumbu.", "Tambahkan kelapa parut and perasan jeruk nipis.", "Masak hingga mendidih and sajikan.")
         ),
@@ -274,7 +274,7 @@ object DummyData {
             name = "Kaledo",
             origin = "Sulawesi Tengah",
             imageUrl = "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&q=80&w=1000",
-            description = "Sup kaki sapi khas Palu dengan kuah yang asam segar dari penggunaan asam jawa muda.",
+            description = "Sup kaki sapi khas Palu with kuah yang asam segar dari penggunaan asam jawa muda.",
             ingredients = listOf("Kaki sapi (tulang sumsum) 1kg", "Asam jawa muda", "Cabai rawit", "Garam"),
             instructions = listOf("Rebus kaki sapi hingga dagingnya empuk.", "Masukkan bumbu ulek (cabai rawit and garam) serta asam jawa muda.", "Masak hingga kuah meresap.", "Sajikan panas-panas.")
         ),
@@ -283,7 +283,7 @@ object DummyData {
             name = "Bau Peapi",
             origin = "Sulawesi Barat",
             imageUrl = "https://images.unsplash.com/photo-1498654896293-37aaa4f9f1e4?auto=format&fit=crop&q=80&w=1000",
-            description = "Masakan ikan khas Mandar dengan kuah kuning yang beraroma segar dari minyak kelapa mandar.",
+            description = "Masakan ikan khas Mandar with kuah kuning yang beraroma segar dari minyak kelapa mandar.",
             ingredients = listOf("Ikan (tuna/tongkol) 500g", "Bawang mandar", "Kunyit", "Cabai rawit", "Minyak kelapa mandar", "Air asam"),
             instructions = listOf("Susun ikan dalam wajan.", "Masukkan bumbu halus, air asam, and minyak kelapa mandar.", "Masak di atas api kecil hingga kuah menyusut.")
         ),
@@ -292,7 +292,7 @@ object DummyData {
             name = "Coto Makassar",
             origin = "Sulawesi Selatan",
             imageUrl = "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=1000",
-            description = "Sup daging dan jeroan sapi khas Makassar with kuah kental dari kacang tanah goreng.",
+            description = "Sup daging and jeroan sapi khas Makassar with kuah kental dari kacang tanah goreng.",
             ingredients = listOf("Daging & jeroan sapi 1kg", "Kacang tanah goreng 250g (haluskan)", "Air cucian beras", "Bawang merah & putih", "Ketumbar", "Serai"),
             instructions = listOf("Rebus daging with air cucian beras and rempah hingga empuk.", "Masukkan kacang tanah halus ke dalam kuah.", "Tumis bumbu halus and campurkan ke kuah.", "Sajikan with burasa atau ketupat.")
         ),
