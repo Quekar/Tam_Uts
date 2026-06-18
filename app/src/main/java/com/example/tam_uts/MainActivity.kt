@@ -28,12 +28,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Tam_UtsTheme {
+            // State untuk mendeteksi mode gelap
+            var isDarkMode by rememberSaveable { mutableStateOf(false) }
+
+            Tam_UtsTheme(darkTheme = isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainApp(onExitApp = { moveTaskToBack(true) })
+                    MainApp(
+                        isDarkMode = isDarkMode,
+                        onThemeChange = { isDarkMode = it },
+                        onExitApp = { moveTaskToBack(true) }
+                    )
                 }
             }
         }
@@ -41,10 +48,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainApp(onExitApp: () -> Unit = {}) {
+fun MainApp(
+    isDarkMode: Boolean,
+    onThemeChange: (Boolean) -> Unit,
+    onExitApp: () -> Unit = {}
+) {
     val authViewModel: AuthViewModel = viewModel()
     val currentUser by authViewModel.currentUser.collectAsState()
-    
+
     var currentPage by rememberSaveable { mutableStateOf(if (authViewModel.isLoggedIn()) Page.HOME else Page.LOGIN) }
     var selectedRecipe by remember { mutableStateOf(DummyData.dummyRecipes[0]) }
 
@@ -94,7 +105,7 @@ fun MainApp(onExitApp: () -> Unit = {}) {
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             when (currentPage) {
                 Page.LOGIN -> LoginScreen(
@@ -142,6 +153,8 @@ fun MainApp(onExitApp: () -> Unit = {}) {
                     onBack = { currentPage = backStack.removeLastOrNull() ?: Page.PROFILE }
                 )
                 Page.SETTINGS -> SettingsScreen(
+                    isDarkMode = isDarkMode,
+                    onThemeChange = onThemeChange,
                     onBack = { currentPage = backStack.removeLastOrNull() ?: Page.PROFILE }
                 )
             }
@@ -151,7 +164,10 @@ fun MainApp(onExitApp: () -> Unit = {}) {
 
 @Composable
 fun BottomNavigationBar(currentPage: Page, onPageSelected: (Page) -> Unit) {
-    NavigationBar(containerColor = Color.White, tonalElevation = 0.dp) {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 0.dp
+    ) {
         val items = listOf(
             Triple(Page.HOME,      Icons.Default.Home,   "Home"),
             Triple(Page.REGIONS,   Icons.Default.Place,  "Wilayah"),

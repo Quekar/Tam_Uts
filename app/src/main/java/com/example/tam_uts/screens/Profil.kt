@@ -1,5 +1,6 @@
 package com.example.tam_uts.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -72,7 +74,8 @@ fun ProfileScreen(
                 modifier = Modifier
                     .size(110.dp)
                     .clip(CircleShape)
-                    .background(LightGray)
+                    // Disesuaikan untuk mode gelap
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             )
             Surface(
                 shape = CircleShape,
@@ -104,7 +107,8 @@ fun ProfileScreen(
 
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            // Koma yang hilang sudah ditambahkan di bawah ini
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -139,11 +143,17 @@ fun ProfileScreen(
 }
 
 @Composable
-fun EditProfileScreen(user: User, onSave: (User) -> Unit, onBack: () -> Unit) {
+fun EditProfileScreen(
+    user: User,
+    onSave: (User) -> Unit,
+    onBack: () -> Unit
+) {
     var name  by remember { mutableStateOf(user.name) }
     var bio   by remember { mutableStateOf(user.bio) }
     var email by remember { mutableStateOf(user.email) }
     var phone by remember { mutableStateOf(user.phone) }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -165,9 +175,10 @@ fun EditProfileScreen(user: User, onSave: (User) -> Unit, onBack: () -> Unit) {
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = Color.LightGray,
-                focusedContainerColor = LightGray,
-                unfocusedContainerColor = LightGray
+                // Disesuaikan untuk mode gelap
+                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
 
@@ -180,9 +191,9 @@ fun EditProfileScreen(user: User, onSave: (User) -> Unit, onBack: () -> Unit) {
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = Color.LightGray,
-                focusedContainerColor = LightGray,
-                unfocusedContainerColor = LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
 
@@ -195,9 +206,9 @@ fun EditProfileScreen(user: User, onSave: (User) -> Unit, onBack: () -> Unit) {
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = Color.LightGray,
-                focusedContainerColor = LightGray,
-                unfocusedContainerColor = LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
 
@@ -211,9 +222,9 @@ fun EditProfileScreen(user: User, onSave: (User) -> Unit, onBack: () -> Unit) {
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = Color.LightGray,
-                focusedContainerColor = LightGray,
-                unfocusedContainerColor = LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
 
@@ -221,8 +232,13 @@ fun EditProfileScreen(user: User, onSave: (User) -> Unit, onBack: () -> Unit) {
 
         Button(
             onClick = {
-                onSave(user.copy(name = name, bio = bio, email = email, phone = phone))
-                onBack()
+                if (name.isBlank()) {
+                    Toast.makeText(context, "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                } else {
+                    onSave(user.copy(name = name, bio = bio, email = email, phone = phone))
+                    Toast.makeText(context, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                    onBack()
+                }
             },
             modifier = Modifier.fillMaxWidth().height(52.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Orange500),
@@ -244,23 +260,36 @@ fun NotificationScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun SettingsScreen(onBack: () -> Unit) {
+fun SettingsScreen(
+    isDarkMode: Boolean,
+    onThemeChange: (Boolean) -> Unit,
+    onBack: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
         ScreenHeader("Pengaturan", onBack)
         Spacer(modifier = Modifier.height(16.dp))
         ListItem(
             headlineContent = { Text("Versi Aplikasi") },
-            trailingContent = { Text("1.0.0") }
+            trailingContent = { Text("1.0.0") },
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
-        HorizontalDivider(color = LightGray)
+        // Warna garis pembatas disesuaikan untuk mode gelap
+        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
         ListItem(
             headlineContent = { Text("Bahasa") },
-            trailingContent = { Text("Bahasa Indonesia") }
+            trailingContent = { Text("Bahasa Indonesia") },
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
-        HorizontalDivider(color = LightGray)
+        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
         ListItem(
             headlineContent = { Text("Mode Gelap") },
-            trailingContent = { Switch(checked = false, onCheckedChange = {}) }
+            trailingContent = {
+                Switch(
+                    checked = isDarkMode,
+                    onCheckedChange = { onThemeChange(it) }
+                )
+            },
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
     }
 }
