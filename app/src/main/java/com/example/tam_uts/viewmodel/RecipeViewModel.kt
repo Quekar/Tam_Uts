@@ -134,7 +134,6 @@ class RecipeViewModel : ViewModel() {
     fun isBookmarked(recipeId: Int): Boolean {
         return _bookmarkedRecipes.value.any { it.id == recipeId }
     }
-
     private val _firestoreRecipes = MutableStateFlow<List<Recipe>>(emptyList())
     val firestoreRecipes: StateFlow<List<Recipe>> = _firestoreRecipes
 

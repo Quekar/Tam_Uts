@@ -262,6 +262,7 @@ fun EditProfileScreen(
     }
 }
 
+
 @Composable
 fun NotificationScreen(onBack: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
@@ -316,19 +317,8 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         ListItem(
-<<<<<<< HEAD
-            headlineContent = { Text("Versi Aplikasi") },
-            trailingContent = { Text("1.0.0") },
-            colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-        )
-        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
-        ListItem(
-            headlineContent = { Text("Bahasa") },
-            trailingContent = { Text("Bahasa Indonesia") },
-=======
             headlineContent  = { Text("Versi Aplikasi") },
             trailingContent  = { Text("1.0.0") },
->>>>>>> 0ea349480df89fed0a68f93f6fb5bde5818d1453
             colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)

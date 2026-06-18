@@ -35,7 +35,7 @@ fun RecipeDetailScreen(
     val detailedRecipe by recipeViewModel.recipeDetail.collectAsState()
     val isLoading by recipeViewModel.isLoading.collectAsState()
     val bookmarkedRecipes by recipeViewModel.bookmarkedRecipes.collectAsState()
-    
+
     val isBookmarked = bookmarkedRecipes.any { it.id == recipe.id }
 
     LaunchedEffect(recipe.id) {
@@ -63,7 +63,7 @@ fun RecipeDetailScreen(
                 )
             }
         }
-        
+
         if (isLoading && detailedRecipe == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = Orange500)
@@ -85,16 +85,16 @@ fun RecipeDetailScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(displayRecipe.name, fontSize = 28.sp, fontWeight = FontWeight.Bold)
                     Text(displayRecipe.origin, fontSize = 16.sp, color = Orange500, fontWeight = FontWeight.Medium)
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     Text("Tentang Masakan", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(8.dp))
                     val cleanDescription = displayRecipe.description.replace(Regex("<[^>]*>"), "")
                     Text(cleanDescription, color = Color.Gray, lineHeight = 20.sp)
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     if (displayRecipe.ingredients.isNotEmpty()) {
                         Text("Bahan-bahan", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -103,7 +103,7 @@ fun RecipeDetailScreen(
                         }
                         Spacer(modifier = Modifier.height(24.dp))
                     }
-                    
+
                     if (displayRecipe.instructions.isNotEmpty()) {
                         Text("Cara Membuat", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))

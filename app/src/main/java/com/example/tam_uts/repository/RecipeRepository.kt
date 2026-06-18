@@ -98,6 +98,7 @@ class RecipeRepository {
         }
     }
 
+
     suspend fun getRecipesFromFirestore(): Result<List<Recipe>> {
         return try {
             val snapshot = recipesCollection.get().await()

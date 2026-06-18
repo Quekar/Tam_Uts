@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.BookmarkRecipeItem
+import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.components.RegionListItem
 import com.example.tam_uts.data.DummyData
@@ -29,14 +30,6 @@ fun RegionsScreen(
     onRecipeClick: (Recipe) -> Unit,
     recipeViewModel: RecipeViewModel = viewModel()
 ) {
-<<<<<<< HEAD
-    val cuisines = listOf(
-        "Indonesian", "Italian", "Japanese", "Thai",
-        "Korean", "Chinese", "Mexican", "French", "Indian", "American"
-    )
-
-    var selectedFilter by remember { mutableStateOf(cuisines[0]) }
-=======
     val internationalCuisines = listOf(
         "Italian", "Japanese", "Thai", "Korean", "Chinese", "Mexican", "French", "Indian", "American"
     )
@@ -45,7 +38,6 @@ fun RegionsScreen(
     var selectedFilter by remember { mutableStateOf(tabs[0]) }
     var selectedRegion by remember { mutableStateOf<String?>(null) }
 
->>>>>>> 0ea349480df89fed0a68f93f6fb5bde5818d1453
     val apiRecipes by recipeViewModel.recipes.collectAsState()
     val isLoading by recipeViewModel.isLoading.collectAsState()
     val error by recipeViewModel.error.collectAsState()
@@ -70,12 +62,7 @@ fun RegionsScreen(
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Eksplorasi Wilayah", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
-<<<<<<< HEAD
-        // Warna teks deskripsi diubah agar dinamis
-        Text("Temukan masakan khas dari berbagai belahan dunia", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-=======
         Text("Temukan masakan khas dari berbagai belahan dunia", fontSize = 14.sp, color = Color.Gray)
->>>>>>> 0ea349480df89fed0a68f93f6fb5bde5818d1453
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -89,8 +76,7 @@ fun RegionsScreen(
                     onClick = { selectedFilter = tab },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
-                        // Menggunakan surfaceVariant sebagai ganti LightGray
-                        containerColor = if (isSelected) Orange500 else MaterialTheme.colorScheme.surfaceVariant,
+                        containerColor = if (isSelected) Orange500 else LightGray,
                         contentColor = if (isSelected) Color.White else Orange500
                     ),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -139,17 +125,6 @@ fun RegionsScreen(
                 }
             }
         } else {
-<<<<<<< HEAD
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                if (apiRecipes.isEmpty()) {
-                    item {
-                        Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
-                            // Warna teks kosong diubah agar dinamis
-                            Text("Tidak ada resep ditemukan.", color = MaterialTheme.colorScheme.onSurfaceVariant)
-=======
             if (isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Orange500)
@@ -177,7 +152,6 @@ fun RegionsScreen(
                                 instructions = emptyList()
                             )
                             BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
->>>>>>> 0ea349480df89fed0a68f93f6fb5bde5818d1453
                         }
                     }
                 }

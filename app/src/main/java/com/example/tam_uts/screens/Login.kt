@@ -25,8 +25,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.R
+import com.example.tam_uts.components.LightGray
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.viewmodel.AuthUiState
 import com.example.tam_uts.viewmodel.AuthViewModel
@@ -62,8 +63,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            // Mengubah Color.White jadi background dinamis menyesuaikan tema
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.White)
             .padding(24.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -90,7 +90,7 @@ fun LoginScreen(
         Text(
             "Silakan masuk ke akun Anda",
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant // Diubah agar dinamis
+            color = Color.Gray
         )
 
         Spacer(modifier = Modifier.height(48.dp))
@@ -108,9 +108,7 @@ fun LoginScreen(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant, // Diubah agar dinamis
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,          // Memaksa warna teks ketikan
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface         // Memaksa warna teks ketikan
+                unfocusedBorderColor = Color.LightGray
             )
         )
 
@@ -138,9 +136,7 @@ fun LoginScreen(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant, // Diubah agar dinamis
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,          // Memaksa warna teks ketikan
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface         // Memaksa warna teks ketikan
+                unfocusedBorderColor = Color.LightGray
             )
         )
 
@@ -168,8 +164,7 @@ fun LoginScreen(
                     strokeWidth = 2.dp
                 )
             } else {
-                // Tambahan Color.White agar teks Masuk tetap kontras dengan tombol Oranye
-                Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -180,7 +175,7 @@ fun LoginScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Belum punya akun? ", color = MaterialTheme.colorScheme.onSurfaceVariant) // Diubah agar dinamis
+            Text("Belum punya akun? ", color = Color.Gray)
             TextButton(onClick = onNavigateToRegister) {
                 Text("Daftar Sekarang", fontWeight = FontWeight.Bold, color = Orange500)
             }

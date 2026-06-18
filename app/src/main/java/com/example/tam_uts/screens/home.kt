@@ -52,7 +52,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Text("TasteMap", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Orange500)
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Card(
@@ -63,7 +63,7 @@ fun HomeScreen(
                 Text("Jelajahi Wilayah Indonesia", color = Color.White, fontWeight = FontWeight.Bold)
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isLoading && recipes.isEmpty()) {
@@ -74,7 +74,7 @@ fun HomeScreen(
             Text("Inspirasi Masak", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.height(8.dp))
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(recipes) { recipe -> 
+                items(recipes) { recipe ->
                     RecipeCard(
                         recipe = recipe,
                         isBookmarked = bookmarkedRecipes.any { it.id == recipe.id },
@@ -83,7 +83,7 @@ fun HomeScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
