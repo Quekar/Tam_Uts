@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // State untuk mendeteksi mode gelap
             var isDarkMode by rememberSaveable { mutableStateOf(false) }
 
             Tam_UtsTheme(darkTheme = isDarkMode) {

@@ -36,7 +36,7 @@ class RecipeViewModel : ViewModel() {
     private var searchJob: Job? = null
 
     fun searchRecipes(query: String? = null, cuisine: String? = null) {
-        searchJob?.cancel()
+        searchJob?.cancel() // batalkan pencarian sebelumnya agar tidak ada race condition
         searchJob = viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -133,5 +133,55 @@ class RecipeViewModel : ViewModel() {
 
     fun isBookmarked(recipeId: Int): Boolean {
         return _bookmarkedRecipes.value.any { it.id == recipeId }
+    }
+
+    // ── Firestore state ───────────────────────────────────────────
+    private val _firestoreRecipes = MutableStateFlow<List<Recipe>>(emptyList())
+    val firestoreRecipes: StateFlow<List<Recipe>> = _firestoreRecipes
+
+    private val _syncStatus = MutableStateFlow<String?>(null)
+    val syncStatus: StateFlow<String?> = _syncStatus
+
+    /** Sync 41 resep lokal → Firestore (panggil sekali dari Settings atau tombol admin) */
+    fun syncLocalToFirestore() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.syncLocalRecipesToFirestore()
+            _syncStatus.value = if (result.isSuccess)
+                "✓ ${result.getOrNull()} resep lokal berhasil disimpan ke Firestore"
+            else
+                "Gagal sync: ${result.exceptionOrNull()?.message}"
+            _isLoading.value = false
+        }
+    }
+
+    /** Ambil semua resep dari Firestore */
+    fun loadRecipesFromFirestore() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.getRecipesFromFirestore()
+            if (result.isSuccess) {
+                _firestoreRecipes.value = result.getOrNull() ?: emptyList()
+            } else {
+                _error.value = "Gagal memuat dari Firestore: ${result.exceptionOrNull()?.message}"
+            }
+            _isLoading.value = false
+        }
+    }
+
+    /** Fetch dari Spoonacular lalu otomatis simpan ke Firestore */
+    fun fetchAndSaveToFirestore(recipeId: Int) {
+        val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.fetchAndSaveSpoonacularRecipe(recipeId, uid)
+            if (result.isSuccess) {
+                _syncStatus.value = "✓ Resep disimpan ke Firestore"
+                _recipeDetail.value = result.getOrNull()
+            } else {
+                _error.value = "Gagal menyimpan: ${result.exceptionOrNull()?.message}"
+            }
+            _isLoading.value = false
+        }
     }
 }
