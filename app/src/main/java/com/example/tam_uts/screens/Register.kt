@@ -30,11 +30,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.viewmodel.AuthUiState
 import com.example.tam_uts.viewmodel.AuthViewModel
-
 
 private enum class PasswordStrength(val label: String, val color: Color, val filledBars: Int) {
     EMPTY("", Color.Transparent, 0),
@@ -97,7 +95,13 @@ fun RegisterScreen(
 
     val isLoading = uiState is AuthUiState.Loading
 
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            // Diubah agar dinamis menyesuaikan tema (terang/gelap)
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
+    ) {
 
         Box(
             modifier = Modifier
@@ -284,7 +288,7 @@ fun RegisterScreen(
                 Text(
                     "Saya setuju dengan Syarat & Ketentuan",
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant // Diubah agar dinamis
                 )
             }
 
@@ -324,7 +328,7 @@ fun RegisterScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Sudah punya akun? ", fontSize = 14.sp, color = Color.Gray)
+                Text("Sudah punya akun? ", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant) // Diubah agar dinamis
                 TextButton(onClick = onNavigateToLogin) {
                     Text("Masuk di sini", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Orange500)
                 }
@@ -339,7 +343,7 @@ private fun RegisterFieldLabel(label: String) {
         label,
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
-        color = Color.DarkGray,
+        color = MaterialTheme.colorScheme.onSurface, // Diubah agar dinamis
         modifier = Modifier.padding(bottom = 5.dp)
     )
 }
@@ -359,7 +363,13 @@ private fun RegisterTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text(placeholder, color = Color.LightGray, fontSize = 13.sp) },
+        placeholder = {
+            Text(
+                placeholder,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f), // Placeholder dinamis
+                fontSize = 13.sp
+            )
+        },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         visualTransformation = visualTransformation,
@@ -372,8 +382,10 @@ private fun RegisterTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Orange500,
             unfocusedBorderColor = Color.Transparent,
-            focusedContainerColor = LightGray,
-            unfocusedContainerColor = LightGray
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
         )
     )
 }
@@ -388,7 +400,8 @@ private fun PasswordStrengthBar(strength: PasswordStrength) {
                     .weight(1f)
                     .height(3.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(if (filled) strength.color else Color(0xFFE5E5E5))
+                    // Background bar disesuaikan untuk Dark Mode
+                    .background(if (filled) strength.color else MaterialTheme.colorScheme.surfaceVariant)
             )
         }
     }

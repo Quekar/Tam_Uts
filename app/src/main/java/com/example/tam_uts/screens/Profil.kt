@@ -273,7 +273,6 @@ fun SettingsScreen(
             trailingContent = { Text("1.0.0") },
             colors = ListItemDefaults.colors(containerColor = Color.Transparent)
         )
-        // Warna garis pembatas disesuaikan untuk mode gelap
         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
         ListItem(
             headlineContent = { Text("Bahasa") },

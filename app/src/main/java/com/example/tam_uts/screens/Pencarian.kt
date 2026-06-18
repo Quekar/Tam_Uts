@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.BookmarkRecipeItem
-import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.data.Recipe
 import com.example.tam_uts.viewmodel.RecipeViewModel
@@ -53,21 +52,21 @@ fun SearchScreen(
         Text(
             text = "Temukan ribuan resep lezat dari seluruh dunia",
             fontSize = 14.sp,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant, // Disesuaikan untuk mode gelap
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         // Search Bar M3
         SearchBar(
             query = searchQuery,
-            onQueryChange = { 
-                searchQuery = it 
+            onQueryChange = {
+                searchQuery = it
                 // Trigger search jika lebih dari 2 karakter
                 if (it.length > 2) {
                     recipeViewModel.searchRecipes(it)
                 }
             },
-            onSearch = { 
+            onSearch = {
                 if (searchQuery.isNotEmpty()) {
                     recipeViewModel.searchRecipes(searchQuery)
                 }
@@ -79,14 +78,17 @@ fun SearchScreen(
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
                     IconButton(onClick = { searchQuery = "" }) {
-                        Icon(Icons.Default.Close, contentDescription = "Hapus", tint = Color.Gray)
+                        Icon(Icons.Default.Close, contentDescription = "Hapus", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             },
+            // Background disesuaikan ke warna dinamis
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
-                .background(LightGray)
         ) {}
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -118,7 +120,7 @@ fun SearchScreen(
                     if (apiRecipes.isEmpty() && !isLoading) {
                         item {
                             Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
-                                Text("Tidak ada resep ditemukan.", color = Color.Gray)
+                                Text("Tidak ada resep ditemukan.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     } else {
