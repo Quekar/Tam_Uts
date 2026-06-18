@@ -22,6 +22,7 @@ import com.example.tam_uts.components.BookmarkRecipeItem
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.data.Recipe
 import com.example.tam_uts.viewmodel.RecipeViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,10 +36,16 @@ fun SearchScreen(
     val isLoading by recipeViewModel.isLoading.collectAsState()
     val error by recipeViewModel.error.collectAsState()
 
-    // Ambil resep acak untuk rekomendasi jika belum ada
     LaunchedEffect(Unit) {
         if (randomRecipes.isEmpty()) {
             recipeViewModel.loadRandomRecipes(10)
+        }
+    }
+
+    LaunchedEffect(searchQuery) {
+        if (searchQuery.length > 2) {
+            delay(400)
+            recipeViewModel.searchRecipes(searchQuery)
         }
     }
 
@@ -56,9 +63,9 @@ fun SearchScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Search Bar M3
         SearchBar(
             query = searchQuery,
+<<<<<<< HEAD
             onQueryChange = {
                 searchQuery = it
                 // Trigger search jika lebih dari 2 karakter
@@ -66,6 +73,9 @@ fun SearchScreen(
                     recipeViewModel.searchRecipes(it)
                 }
             },
+=======
+            onQueryChange = { searchQuery = it },
+>>>>>>> 0ea349480df89fed0a68f93f6fb5bde5818d1453
             onSearch = {
                 if (searchQuery.isNotEmpty()) {
                     recipeViewModel.searchRecipes(searchQuery)
@@ -91,6 +101,11 @@ fun SearchScreen(
                 .clip(RoundedCornerShape(24.dp))
         ) {}
 
+        if (error != null && searchQuery.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(error ?: "", color = Color(0xFFE53935), fontSize = 12.sp)
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isLoading && searchQuery.isNotEmpty()) {
@@ -103,7 +118,6 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 if (searchQuery.isEmpty()) {
-                    // Tampilkan rekomendasi jika tidak ada pencarian
                     item {
                         Text(
                             text = "Rekomendasi Untukmu",
@@ -116,7 +130,6 @@ fun SearchScreen(
                         BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
                     }
                 } else {
-                    // Tampilkan hasil pencarian
                     if (apiRecipes.isEmpty() && !isLoading) {
                         item {
                             Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
@@ -137,7 +150,7 @@ fun SearchScreen(
                                 id = apiRecipe.id,
                                 name = apiRecipe.title,
                                 origin = "API",
-                                imageUrl = apiRecipe.image,
+                                imageUrl = apiRecipe.image ?: "",
                                 description = "",
                                 ingredients = emptyList(),
                                 instructions = emptyList()
