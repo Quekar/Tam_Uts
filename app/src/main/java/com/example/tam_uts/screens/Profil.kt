@@ -102,20 +102,6 @@ fun ProfileScreen(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "${user.recipesUploaded}",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Orange500
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text("Resep Diunggah", fontSize = 13.sp, color = Color.Gray)
-        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
