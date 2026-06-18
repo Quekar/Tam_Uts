@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "988714230855",
+    "project_id": "tastemap-1aea6",
+    "storage_bucket": "tastemap-1aea6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988714230855:android:ec79a6f91167b5f280bd62",
+        "android_client_info": {
+          "package_name": "com.example.tam_uts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNlaW-b-5XTM_TXXAVlcS5rfeMljtX10k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

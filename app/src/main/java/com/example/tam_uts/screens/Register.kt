@@ -29,8 +29,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
+import com.example.tam_uts.viewmodel.AuthUiState
+import com.example.tam_uts.viewmodel.AuthViewModel
+
 
 private enum class PasswordStrength(val label: String, val color: Color, val filledBars: Int) {
     EMPTY("", Color.Transparent, 0),
@@ -58,23 +62,43 @@ private fun evaluatePassword(password: String): PasswordStrength {
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val uiState by authViewModel.uiState.collectAsState()
 
-    var firstName    by remember { mutableStateOf("") }
-    var lastName     by remember { mutableStateOf("") }
-    var email        by remember { mutableStateOf("") }
-    var phone        by remember { mutableStateOf("") }
-    var password     by remember { mutableStateOf("") }
-    var confirmPass  by remember { mutableStateOf("") }
-    var passVisible  by remember { mutableStateOf(false) }
-    var confVisible  by remember { mutableStateOf(false) }
-    var agreedTerms  by remember { mutableStateOf(false) }
+    var firstName   by remember { mutableStateOf("") }
+    var lastName    by remember { mutableStateOf("") }
+    var email       by remember { mutableStateOf("") }
+    var phone       by remember { mutableStateOf("") }
+    var password    by remember { mutableStateOf("") }
+    var confirmPass by remember { mutableStateOf("") }
+    var passVisible by remember { mutableStateOf(false) }
+    var confVisible by remember { mutableStateOf(false) }
+    var agreedTerms by remember { mutableStateOf(false) }
 
     val strength = evaluatePassword(password)
 
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is AuthUiState.Success -> {
+                Toast.makeText(context, "Akun berhasil dibuat! Selamat datang 🎉", Toast.LENGTH_SHORT).show()
+                authViewModel.resetState()
+                onRegisterSuccess()
+            }
+            is AuthUiState.Error -> {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                authViewModel.resetState()
+            }
+            else -> Unit
+        }
+    }
+
+    val isLoading = uiState is AuthUiState.Loading
+
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,7 +111,7 @@ fun RegisterScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .background(Color.White.copy(alpha = 0.2f))
-                        .clickable { onNavigateToLogin() }
+                        .clickable(enabled = !isLoading) { onNavigateToLogin() }
                         .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -98,12 +122,15 @@ fun RegisterScreen(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Kembali", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Kembali",
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     "Bergabung sekarang ✨",
                     fontSize = 13.sp,
@@ -118,7 +145,6 @@ fun RegisterScreen(
                     color = Color.White,
                     lineHeight = 28.sp
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     StepIndicator(active = true)
@@ -138,6 +164,7 @@ fun RegisterScreen(
         }
 
         Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 24.dp)) {
+
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Column(modifier = Modifier.weight(1f)) {
                     RegisterFieldLabel("Nama Depan")
@@ -145,7 +172,10 @@ fun RegisterScreen(
                         value = firstName,
                         onValueChange = { firstName = it },
                         placeholder = "Andi",
-                        leadingIcon = { Icon(Icons.Default.Person, null, tint = Orange500, modifier = Modifier.size(18.dp)) }
+                        enabled = !isLoading,
+                        leadingIcon = {
+                            Icon(Icons.Default.Person, null, tint = Orange500, modifier = Modifier.size(18.dp))
+                        }
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
@@ -154,7 +184,10 @@ fun RegisterScreen(
                         value = lastName,
                         onValueChange = { lastName = it },
                         placeholder = "Pratama",
-                        leadingIcon = { Icon(Icons.Default.Person, null, tint = Orange500, modifier = Modifier.size(18.dp)) }
+                        enabled = !isLoading,
+                        leadingIcon = {
+                            Icon(Icons.Default.Person, null, tint = Orange500, modifier = Modifier.size(18.dp))
+                        }
                     )
                 }
             }
@@ -167,7 +200,10 @@ fun RegisterScreen(
                 onValueChange = { email = it },
                 placeholder = "contoh@email.com",
                 keyboardType = KeyboardType.Email,
-                leadingIcon = { Icon(Icons.Default.Email, null, tint = Orange500, modifier = Modifier.size(18.dp)) }
+                enabled = !isLoading,
+                leadingIcon = {
+                    Icon(Icons.Default.Email, null, tint = Orange500, modifier = Modifier.size(18.dp))
+                }
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -178,7 +214,10 @@ fun RegisterScreen(
                 onValueChange = { phone = it },
                 placeholder = "+62 812 xxxx xxxx",
                 keyboardType = KeyboardType.Phone,
-                leadingIcon = { Icon(Icons.Default.Phone, null, tint = Orange500, modifier = Modifier.size(18.dp)) }
+                enabled = !isLoading,
+                leadingIcon = {
+                    Icon(Icons.Default.Phone, null, tint = Orange500, modifier = Modifier.size(18.dp))
+                }
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -189,13 +228,19 @@ fun RegisterScreen(
                 onValueChange = { password = it },
                 placeholder = "Min. 8 karakter",
                 keyboardType = KeyboardType.Password,
-                visualTransformation = if (passVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                leadingIcon = { Icon(Icons.Default.Lock, null, tint = Orange500, modifier = Modifier.size(18.dp)) },
+                enabled = !isLoading,
+                visualTransformation = if (passVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, null, tint = Orange500, modifier = Modifier.size(18.dp))
+                },
                 trailingIcon = {
                     TextButton(onClick = { passVisible = !passVisible }) {
                         Text(
                             if (passVisible) "Sembunyikan" else "Lihat",
-                            fontSize = 11.sp, color = Orange500, fontWeight = FontWeight.Bold
+                            fontSize = 11.sp,
+                            color = Orange500,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -220,13 +265,19 @@ fun RegisterScreen(
                 onValueChange = { confirmPass = it },
                 placeholder = "Ulangi password",
                 keyboardType = KeyboardType.Password,
-                visualTransformation = if (confVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                leadingIcon = { Icon(Icons.Default.Lock, null, tint = Orange500, modifier = Modifier.size(18.dp)) },
+                enabled = !isLoading,
+                visualTransformation = if (confVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, null, tint = Orange500, modifier = Modifier.size(18.dp))
+                },
                 trailingIcon = {
                     TextButton(onClick = { confVisible = !confVisible }) {
                         Text(
                             if (confVisible) "Sembunyikan" else "Lihat",
-                            fontSize = 11.sp, color = Orange500, fontWeight = FontWeight.Bold
+                            fontSize = 11.sp,
+                            color = Orange500,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 },
@@ -257,11 +308,16 @@ fun RegisterScreen(
                             if (agreedTerms) Orange500 else Color.LightGray,
                             RoundedCornerShape(4.dp)
                         )
-                        .clickable { agreedTerms = !agreedTerms },
+                        .clickable(enabled = !isLoading) { agreedTerms = !agreedTerms },
                     contentAlignment = Alignment.Center
                 ) {
                     if (agreedTerms) {
-                        Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(13.dp))
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(13.dp)
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))
@@ -278,46 +334,67 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    when {
-                        firstName.isEmpty() || lastName.isEmpty() ->
-                            Toast.makeText(context, "Nama lengkap wajib diisi!", Toast.LENGTH_SHORT).show()
-                        email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
-                            Toast.makeText(context, "Masukkan email yang valid!", Toast.LENGTH_SHORT).show()
-                        phone.isEmpty() ->
-                            Toast.makeText(context, "Nomor telepon wajib diisi!", Toast.LENGTH_SHORT).show()
-                        password.length < 8 ->
-                            Toast.makeText(context, "Password minimal 8 karakter!", Toast.LENGTH_SHORT).show()
-                        password != confirmPass ->
-                            Toast.makeText(context, "Konfirmasi password tidak cocok!", Toast.LENGTH_SHORT).show()
-                        !agreedTerms ->
-                            Toast.makeText(context, "Harap setujui syarat & ketentuan!", Toast.LENGTH_SHORT).show()
-                        else -> {
-                            Toast.makeText(context, "Akun berhasil dibuat! Selamat datang 🎉", Toast.LENGTH_SHORT).show()
-                            onRegisterSuccess()
-                        }
+                    if (!agreedTerms) {
+                        Toast.makeText(context, "Harap setujui syarat & ketentuan!", Toast.LENGTH_SHORT).show()
+                        return@Button
                     }
+                    authViewModel.register(
+                        firstName = firstName,
+                        lastName = lastName,
+                        email = email,
+                        phone = phone,
+                        password = password,
+                        confirmPassword = confirmPass
+                    )
                 },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Orange500),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Icon(Icons.Default.Person, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Buat Akun", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        "Buat Akun",
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-                Text("  atau daftar dengan  ", fontSize = 11.sp, color = Color.LightGray, fontWeight = FontWeight.SemiBold)
+                Text(
+                    "  atau daftar dengan  ",
+                    fontSize = 11.sp,
+                    color = Color.LightGray,
+                    fontWeight = FontWeight.SemiBold
+                )
                 HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(
-                onClick = { Toast.makeText(context, "Daftar dengan Google segera hadir!", Toast.LENGTH_SHORT).show() },
+                onClick = {
+                    Toast.makeText(context, "Daftar dengan Google segera hadir!", Toast.LENGTH_SHORT).show()
+                },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth().height(46.dp),
                 shape = RoundedCornerShape(12.dp),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray),
@@ -325,7 +402,12 @@ fun RegisterScreen(
             ) {
                 Text("🔍", fontSize = 15.sp)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Lanjutkan dengan Google", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.DarkGray)
+                Text(
+                    "Lanjutkan dengan Google",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray
+                )
             }
 
             Spacer(modifier = Modifier.height(22.dp))
@@ -335,15 +417,27 @@ fun RegisterScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Sudah punya akun? ", fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.SemiBold)
-                TextButton(onClick = onNavigateToLogin, contentPadding = PaddingValues(0.dp)) {
-                    Text("Masuk di sini", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Orange500)
+                Text(
+                    "Sudah punya akun? ",
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.SemiBold
+                )
+                TextButton(
+                    onClick = onNavigateToLogin,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        "Masuk di sini",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Orange500
+                    )
                 }
             }
         }
     }
 }
-
 
 @Composable
 private fun StepIndicator(active: Boolean) {
@@ -376,7 +470,8 @@ private fun RegisterTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
-    isError: Boolean = false
+    isError: Boolean = false,
+    enabled: Boolean = true
 ) {
     OutlinedTextField(
         value = value,
@@ -388,6 +483,7 @@ private fun RegisterTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
         isError = isError,
+        enabled = enabled,
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         colors = OutlinedTextFieldDefaults.colors(

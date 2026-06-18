@@ -23,18 +23,40 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
+import com.example.tam_uts.viewmodel.AuthUiState
+import com.example.tam_uts.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val uiState by authViewModel.uiState.collectAsState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is AuthUiState.Success -> {
+                authViewModel.resetState()
+                onLoginSuccess()
+            }
+            is AuthUiState.Error -> {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                authViewModel.resetState()
+            }
+            else -> Unit
+        }
+    }
+
+    val isLoading = uiState is AuthUiState.Loading
 
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
 
@@ -45,7 +67,6 @@ fun LoginScreen(
                 .padding(horizontal = 24.dp, vertical = 48.dp)
         ) {
             Column {
-                // Logo row
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
@@ -64,9 +85,7 @@ fun LoginScreen(
                         color = Color.White
                     )
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Text(
                     "Selamat datang kembali 👋",
                     fontSize = 14.sp,
@@ -92,9 +111,12 @@ fun LoginScreen(
                 value = email,
                 onValueChange = { email = it },
                 placeholder = { Text("contoh@email.com", color = Color.Gray) },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Orange500) },
+                leadingIcon = {
+                    Icon(Icons.Default.Email, contentDescription = null, tint = Orange500)
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 singleLine = true,
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -113,7 +135,9 @@ fun LoginScreen(
                 value = password,
                 onValueChange = { password = it },
                 placeholder = { Text("Masukkan password", color = Color.Gray) },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Orange500) },
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, contentDescription = null, tint = Orange500)
+                },
                 trailingIcon = {
                     TextButton(onClick = { passwordVisible = !passwordVisible }) {
                         Text(
@@ -124,9 +148,11 @@ fun LoginScreen(
                         )
                     }
                 },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -139,29 +165,41 @@ fun LoginScreen(
 
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                 TextButton(onClick = {
-                    Toast.makeText(context, "Fitur reset password segera hadir!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Fitur reset password segera hadir!", Toast.LENGTH_SHORT)
+                        .show()
                 }) {
-                    Text("Lupa password?", color = Orange500, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        "Lupa password?",
+                        color = Orange500,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = {
-                    if (email.isEmpty() || password.isEmpty()) {
-                        Toast.makeText(context, "Email dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show()
-                    } else if (password.length < 6) {
-                        Toast.makeText(context, "Password minimal 6 karakter!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        onLoginSuccess()
-                    }
-                },
+                onClick = { authViewModel.login(email, password) },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Orange500),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Masuk", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(
+                        "Masuk",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -181,8 +219,10 @@ fun LoginScreen(
 
             OutlinedButton(
                 onClick = {
-                    Toast.makeText(context, "Login dengan Google segera hadir!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Login dengan Google segera hadir!", Toast.LENGTH_SHORT)
+                        .show()
                 },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.DarkGray),
@@ -205,7 +245,12 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Belum punya akun? ", fontSize = 13.sp, color = Color.Gray, fontWeight = FontWeight.SemiBold)
+                Text(
+                    "Belum punya akun? ",
+                    fontSize = 13.sp,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.SemiBold
+                )
                 TextButton(
                     onClick = onNavigateToRegister,
                     contentPadding = PaddingValues(0.dp)

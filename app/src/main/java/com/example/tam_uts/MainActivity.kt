@@ -12,14 +12,17 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.data.*
 import com.example.tam_uts.screens.*
 import com.example.tam_uts.ui.theme.Tam_UtsTheme
+import com.example.tam_uts.viewmodel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +43,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp(onExitApp: () -> Unit = {}) {
-    var currentPage by rememberSaveable { mutableStateOf(Page.LOGIN) }
+    val authViewModel: AuthViewModel = viewModel()
+    val currentFirebaseUser by authViewModel.currentUser.collectAsState()
+
+    val startPage = if (authViewModel.isLoggedIn()) Page.HOME else Page.LOGIN
+
+    var currentPage by rememberSaveable { mutableStateOf(startPage) }
     var userState by remember { mutableStateOf(DummyData.dummyUser) }
     var selectedRecipe by remember { mutableStateOf(DummyData.dummyRecipes[0]) }
 
@@ -50,6 +58,12 @@ fun MainApp(onExitApp: () -> Unit = {}) {
         Page.HOME, Page.REGIONS, Page.SEARCH,
         Page.ADD, Page.BOOKMARKS, Page.PROFILE
     )
+
+    LaunchedEffect(currentFirebaseUser) {
+        currentFirebaseUser?.let { firestoreUser ->
+            userState = firestoreUser
+        }
+    }
 
     fun navigateTo(page: Page) {
         backStack.add(currentPage)
@@ -98,14 +112,18 @@ fun MainApp(onExitApp: () -> Unit = {}) {
                         backStack.clear()
                         currentPage = Page.HOME
                     },
-                    onNavigateToRegister = { navigateTo(Page.REGISTER) }
+                    onNavigateToRegister = { navigateTo(Page.REGISTER) },
+                    authViewModel = authViewModel
                 )
                 Page.REGISTER -> RegisterScreen(
                     onRegisterSuccess = {
                         backStack.clear()
                         currentPage = Page.HOME
                     },
-                    onNavigateToLogin = { currentPage = backStack.removeLastOrNull() ?: Page.LOGIN }
+                    onNavigateToLogin = {
+                        currentPage = backStack.removeLastOrNull() ?: Page.LOGIN
+                    },
+                    authViewModel = authViewModel
                 )
                 Page.HOME -> HomeScreen(
                     onRecipeClick = navigateToDetail,
@@ -120,7 +138,12 @@ fun MainApp(onExitApp: () -> Unit = {}) {
                 Page.BOOKMARKS -> BookmarksScreen(onRecipeClick = navigateToDetail)
                 Page.PROFILE -> ProfileScreen(
                     user = userState,
-                    onNavigate = { navigateTo(it) }
+                    onNavigate = { navigateTo(it) },
+                    onLogout = {
+                        authViewModel.logout()
+                        backStack.clear()
+                        currentPage = Page.LOGIN
+                    }
                 )
                 Page.DETAIL -> RecipeDetailScreen(
                     recipe = selectedRecipe,
