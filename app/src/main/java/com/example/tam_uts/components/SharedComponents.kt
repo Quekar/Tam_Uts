@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +29,6 @@ import coil.compose.AsyncImage
 import com.example.tam_uts.data.Recipe
 
 val Orange500 = Color(0xFFFF9800)
-val LightGray = Color(0xFFF5F5F5)
 
 @Composable
 fun ScreenHeader(title: String, onBack: () -> Unit) {
@@ -66,7 +66,7 @@ fun RecipeCard(
                 )
                 Surface(
                     modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
                     shape = CircleShape
                 ) {
                     IconButton(
@@ -92,7 +92,10 @@ fun RecipeCard(
 
 @Composable
 fun RegionListItem(origin: String, onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable { onClick() }, colors = CardDefaults.cardColors(containerColor = LightGray)) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.Place, contentDescription = null, tint = Orange500)
             Spacer(modifier = Modifier.width(16.dp))
@@ -112,7 +115,7 @@ fun BookmarkRecipeItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = LightGray),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -133,10 +136,10 @@ fun BookmarkRecipeItem(
                 Icon(
                     imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
                     contentDescription = "Bookmark",
-                    tint = if (isBookmarked) Orange500 else Color.Gray
+                    tint = if (isBookmarked) Orange500 else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -145,7 +148,19 @@ fun BookmarkRecipeItem(
 fun CustomTextField(label: String, value: String, onValueChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
         Text(label, fontWeight = FontWeight.Bold)
-        BasicTextField(value = value, onValueChange = onValueChange, modifier = Modifier.fillMaxWidth().background(LightGray, RoundedCornerShape(8.dp)).padding(16.dp))
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            // Menambahkan warna teks dinamis sesuai tema
+            textStyle = TextStyle(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 16.sp
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
+                .padding(16.dp)
+        )
     }
 }
 
@@ -157,7 +172,7 @@ fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
         }
         Spacer(modifier = Modifier.width(16.dp))
         Text(title, modifier = Modifier.weight(1f), fontWeight = FontWeight.Medium)
-        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
+        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -166,7 +181,7 @@ fun AddressItem(label: String, address: String, isDefault: Boolean) {
     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), border = if (isDefault) BorderStroke(1.dp, Orange500) else null) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(label, fontWeight = FontWeight.Bold)
-            Text(address, color = Color.Gray)
+            Text(address, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -176,6 +191,6 @@ fun IngredientItem(text: String) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 4.dp)) {
         Box(modifier = Modifier.size(6.dp).background(Orange500, CircleShape))
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text, fontSize = 14.sp, color = Color.DarkGray)
+        Text(text, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
     }
 }
