@@ -31,10 +31,6 @@ import com.example.tam_uts.data.Page
 import com.example.tam_uts.data.User
 import com.example.tam_uts.viewmodel.RecipeViewModel
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ProfileScreen
-// ─────────────────────────────────────────────────────────────────────────────
-
 @Composable
 fun ProfileScreen(
     user: User,
@@ -74,7 +70,6 @@ fun ProfileScreen(
         Text("Profil Saya", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ── Avatar ────────────────────────────────────────────────────────────
         Box(contentAlignment = Alignment.BottomEnd) {
             Image(
                 painter = painterResource(id = android.R.drawable.ic_menu_gallery),
@@ -111,7 +106,6 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // ── Menu Card ─────────────────────────────────────────────────────────
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -139,7 +133,6 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // ── Logout ────────────────────────────────────────────────────────────
         TextButton(
             onClick = { showLogoutDialog = true },
             modifier = Modifier.fillMaxWidth()
@@ -149,9 +142,6 @@ fun ProfileScreen(
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EditProfileScreen
-// ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
 fun EditProfileScreen(
@@ -183,7 +173,6 @@ fun EditProfileScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ── Nama ──────────────────────────────────────────────────────────────
         Text("Nama Lengkap", fontWeight = FontWeight.Bold, fontSize = 14.sp)
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
@@ -199,7 +188,6 @@ fun EditProfileScreen(
             )
         )
 
-        // ── Email ─────────────────────────────────────────────────────────────
         Spacer(modifier = Modifier.height(16.dp))
         Text("Email", fontWeight = FontWeight.Bold, fontSize = 14.sp)
         Spacer(modifier = Modifier.height(8.dp))
@@ -216,7 +204,6 @@ fun EditProfileScreen(
             )
         )
 
-        // ── Telepon ───────────────────────────────────────────────────────────
         Spacer(modifier = Modifier.height(16.dp))
         Text("Nomor Telepon", fontWeight = FontWeight.Bold, fontSize = 14.sp)
         Spacer(modifier = Modifier.height(8.dp))
@@ -233,7 +220,6 @@ fun EditProfileScreen(
             )
         )
 
-        // ── Bio ───────────────────────────────────────────────────────────────
         Spacer(modifier = Modifier.height(16.dp))
         Text("Bio", fontWeight = FontWeight.Bold, fontSize = 14.sp)
         Spacer(modifier = Modifier.height(8.dp))
@@ -276,10 +262,6 @@ fun EditProfileScreen(
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// NotificationScreen
-// ─────────────────────────────────────────────────────────────────────────────
-
 @Composable
 fun NotificationScreen(onBack: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
@@ -290,9 +272,6 @@ fun NotificationScreen(onBack: () -> Unit) {
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SettingsScreen  (+ Firebase sync)
-// ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
 fun SettingsScreen(
@@ -306,7 +285,6 @@ fun SettingsScreen(
 
     var showSyncDialog by remember { mutableStateOf(false) }
 
-    // ── Konfirmasi sebelum sync ───────────────────────────────────────────────
     if (showSyncDialog) {
         AlertDialog(
             onDismissRequest = { showSyncDialog = false },
@@ -337,7 +315,6 @@ fun SettingsScreen(
         ScreenHeader("Pengaturan", onBack)
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ── Versi ─────────────────────────────────────────────────────────────
         ListItem(
             headlineContent  = { Text("Versi Aplikasi") },
             trailingContent  = { Text("1.0.0") },

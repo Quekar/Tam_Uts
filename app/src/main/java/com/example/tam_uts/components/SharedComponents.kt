@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tam_uts.data.Recipe
 
-// Warna Global
 val Orange500 = Color(0xFFFF9800)
 val LightGray = Color(0xFFF5F5F5)
 

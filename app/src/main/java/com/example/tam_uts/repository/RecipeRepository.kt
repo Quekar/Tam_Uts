@@ -22,7 +22,6 @@ class RecipeRepository {
     private val db = FirebaseFirestore.getInstance()
     private val recipesCollection = db.collection("recipes")
 
-    // ── Spoonacular ──────────────────────────────────────────────
     suspend fun searchRecipes(query: String? = null, cuisine: String? = null) =
         api.searchRecipes(query = query, cuisine = cuisine, apiKey = apiKey)
 
@@ -30,9 +29,6 @@ class RecipeRepository {
 
     suspend fun getRandomRecipes(number: Int) = api.getRandomRecipes(number, apiKey)
 
-    // ── Firestore: Write ─────────────────────────────────────────
-
-    /** Simpan satu resep ke Firestore. authorId opsional (pakai UID user login). */
     suspend fun saveRecipeToFirestore(recipe: Recipe, authorId: String = ""): Result<Unit> {
         return try {
             val docId = recipe.id.toString()
@@ -53,7 +49,6 @@ class RecipeRepository {
         }
     }
 
-    /** Sync semua data lokal (DummyData) ke Firestore sekaligus. */
     suspend fun syncLocalRecipesToFirestore(): Result<Int> {
         return try {
             val batch = db.batch()
@@ -78,10 +73,6 @@ class RecipeRepository {
         }
     }
 
-    /**
-     * Ambil detail resep dari Spoonacular lalu simpan otomatis ke Firestore.
-     * authorId diisi UID user yang sedang login (jika ada).
-     */
     suspend fun fetchAndSaveSpoonacularRecipe(
         id: Int,
         authorId: String = ""
@@ -107,9 +98,6 @@ class RecipeRepository {
         }
     }
 
-    // ── Firestore: Read ──────────────────────────────────────────
-
-    /** Ambil semua resep dari Firestore. */
     suspend fun getRecipesFromFirestore(): Result<List<Recipe>> {
         return try {
             val snapshot = recipesCollection.get().await()
@@ -135,7 +123,6 @@ class RecipeRepository {
         }
     }
 
-    /** Ambil resep berdasarkan regionCategory dari Firestore. */
     suspend fun getRecipesByCategory(category: String): Result<List<Recipe>> {
         return try {
             val snapshot = recipesCollection

@@ -36,7 +36,7 @@ class RecipeViewModel : ViewModel() {
     private var searchJob: Job? = null
 
     fun searchRecipes(query: String? = null, cuisine: String? = null) {
-        searchJob?.cancel() // batalkan pencarian sebelumnya agar tidak ada race condition
+        searchJob?.cancel()
         searchJob = viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -135,14 +135,12 @@ class RecipeViewModel : ViewModel() {
         return _bookmarkedRecipes.value.any { it.id == recipeId }
     }
 
-    // ── Firestore state ───────────────────────────────────────────
     private val _firestoreRecipes = MutableStateFlow<List<Recipe>>(emptyList())
     val firestoreRecipes: StateFlow<List<Recipe>> = _firestoreRecipes
 
     private val _syncStatus = MutableStateFlow<String?>(null)
     val syncStatus: StateFlow<String?> = _syncStatus
 
-    /** Sync 41 resep lokal → Firestore (panggil sekali dari Settings atau tombol admin) */
     fun syncLocalToFirestore() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -155,7 +153,6 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    /** Ambil semua resep dari Firestore */
     fun loadRecipesFromFirestore() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -169,7 +166,6 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    /** Fetch dari Spoonacular lalu otomatis simpan ke Firestore */
     fun fetchAndSaveToFirestore(recipeId: Int) {
         val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
         viewModelScope.launch {
