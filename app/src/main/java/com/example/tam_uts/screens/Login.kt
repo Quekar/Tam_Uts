@@ -27,17 +27,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tam_uts.R
 import com.example.tam_uts.components.LightGray
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.Orange500
+import com.example.tam_uts.viewmodel.AuthUiState
+import com.example.tam_uts.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val uiState by authViewModel.uiState.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is AuthUiState.Success -> {
+                authViewModel.resetState()
+                onLoginSuccess()
+            }
+            is AuthUiState.Error -> {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                authViewModel.resetState()
+            }
+            else -> Unit
+        }
+    }
+
+    val isLoading = uiState is AuthUiState.Loading
 
     Column(
         modifier = Modifier
@@ -81,6 +102,7 @@ fun LoginScreen(
             placeholder = { Text("Masukkan email Anda") },
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Orange500) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            enabled = !isLoading,
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -129,20 +151,21 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = {
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(context, "Harap isi semua bidang!", Toast.LENGTH_SHORT).show()
-                } else {
-                    onLoginSuccess()
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
+            onClick = { authViewModel.login(email, password) },
+            enabled = !isLoading,
+            modifier = Modifier.fillMaxWidth().height(52.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Orange500),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
