@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tam_uts.data.DummyData
 import com.example.tam_uts.data.Recipe
+import com.example.tam_uts.data.SpoonacularRecipeDetail
 import com.example.tam_uts.data.SpoonacularRecipeSummary
 import com.example.tam_uts.repository.RecipeRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -31,8 +33,11 @@ class RecipeViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    private var searchJob: Job? = null
+
     fun searchRecipes(query: String? = null, cuisine: String? = null) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             try {
@@ -40,13 +45,13 @@ class RecipeViewModel : ViewModel() {
                 _recipes.value = response.results
             } catch (e: Exception) {
                 val fallback = DummyData.dummyRecipes
-                    .filter { 
+                    .filter {
                         (query == null || it.name.contains(query, ignoreCase = true)) &&
-                        (cuisine == null || it.origin.contains(cuisine, ignoreCase = true))
+                                (cuisine == null || it.origin.contains(cuisine, ignoreCase = true))
                     }
                     .map { SpoonacularRecipeSummary(it.id, it.name, it.imageUrl) }
                 _recipes.value = fallback
-                _error.value = "Limit API tercapai. Menampilkan data lokal."
+                _error.value = describeError(e)
             } finally {
                 _isLoading.value = false
             }
@@ -59,20 +64,10 @@ class RecipeViewModel : ViewModel() {
             _error.value = null
             try {
                 val response = repository.getRandomRecipes(number)
-                _randomRecipes.value = response.recipes.map { detail ->
-                    Recipe(
-                        id = detail.id,
-                        name = detail.title,
-                        origin = "Spoonacular API",
-                        imageUrl = detail.image,
-                        description = detail.summary,
-                        ingredients = detail.extendedIngredients.map { it.original },
-                        instructions = detail.analyzedInstructions.flatMap { it.steps.map { step -> step.step } }
-                    )
-                }
+                _randomRecipes.value = response.recipes.map { it.toRecipe() }
             } catch (e: Exception) {
                 _randomRecipes.value = DummyData.dummyRecipes.shuffled().take(number)
-                _error.value = "Limit API tercapai. Menampilkan data lokal."
+                _error.value = describeError(e)
             } finally {
                 _isLoading.value = false
             }
@@ -85,26 +80,44 @@ class RecipeViewModel : ViewModel() {
             _error.value = null
             try {
                 val detail = repository.getRecipeDetail(id)
-                _recipeDetail.value = Recipe(
-                    id = detail.id,
-                    name = detail.title,
-                    origin = "Spoonacular API",
-                    imageUrl = detail.image,
-                    description = detail.summary,
-                    ingredients = detail.extendedIngredients.map { it.original },
-                    instructions = detail.analyzedInstructions.flatMap { it.steps.map { step -> step.step } }
-                )
+                _recipeDetail.value = detail.toRecipe()
             } catch (e: Exception) {
                 val fallback = DummyData.dummyRecipes.find { it.id == id }
                 if (fallback != null) {
                     _recipeDetail.value = fallback
-                    _error.value = "Limit API tercapai. Menampilkan data lokal."
+                    _error.value = describeError(e)
                 } else {
-                    _error.value = "Gagal memuat detail resep: ${e.message}"
+                    _error.value = "Gagal memuat detail resep: ${describeError(e)}"
                 }
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    private fun SpoonacularRecipeDetail.toRecipe(): Recipe {
+        return Recipe(
+            id = id,
+            name = title.ifBlank { "Resep tanpa nama" },
+            origin = "Spoonacular API",
+            imageUrl = image ?: "",
+            description = summary ?: "",
+            ingredients = extendedIngredients.orEmpty().mapNotNull { it.original },
+            instructions = analyzedInstructions.orEmpty()
+                .flatMap { it.steps.orEmpty() }
+                .mapNotNull { it.step }
+        )
+    }
+
+    private fun describeError(e: Exception): String {
+        return when (e) {
+            is retrofit2.HttpException -> when (e.code()) {
+                402 -> "Limit harian API sudah habis. Menampilkan data lokal."
+                401 -> "API key tidak valid."
+                else -> "Server resep bermasalah (kode ${e.code()}). Menampilkan data lokal."
+            }
+            is java.io.IOException -> "Tidak ada koneksi internet. Menampilkan data lokal."
+            else -> "Gagal memuat data resep. Menampilkan data lokal."
         }
     }
 

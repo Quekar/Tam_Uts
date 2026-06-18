@@ -1,34 +1,32 @@
 package com.example.tam_uts.data
 
-import com.google.gson.annotations.SerializedName
-
 data class SpoonacularSearchResponse(
-    val results: List<SpoonacularRecipeSummary>
+    val results: List<SpoonacularRecipeSummary> = emptyList()
 )
 
 data class SpoonacularRecipeSummary(
     val id: Int,
-    val title: String,
-    val image: String
+    val title: String = "",
+    val image: String? = null
 )
 
 data class SpoonacularRecipeDetail(
     val id: Int,
-    val title: String,
-    val image: String,
-    val summary: String,
-    val extendedIngredients: List<SpoonacularIngredient>,
-    val analyzedInstructions: List<SpoonacularInstruction>
+    val title: String = "",
+    val image: String? = null,
+    val summary: String? = null,
+    val extendedIngredients: List<SpoonacularIngredient>? = null,
+    val analyzedInstructions: List<SpoonacularInstruction>? = null
 )
 
 data class SpoonacularIngredient(
-    val original: String
+    val original: String? = null
 )
 
 data class SpoonacularInstruction(
-    val steps: List<SpoonacularStep>
+    val steps: List<SpoonacularStep>? = null
 )
 
 data class SpoonacularStep(
-    val step: String
+    val step: String? = null
 )
