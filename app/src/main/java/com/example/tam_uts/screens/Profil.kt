@@ -54,7 +54,7 @@ fun ProfileScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
-                    Text("Batal", color = Orange500)
+                    Text("Batal", color = Color(0xFFFF9800))
                 }
             }
         )
@@ -63,6 +63,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -81,7 +82,7 @@ fun ProfileScreen(
             )
             Surface(
                 shape = CircleShape,
-                color = Orange500,
+                color = Color(0xFFFF9800), // Orange500
                 modifier = Modifier
                     .size(32.dp)
                     .offset(x = (-4).dp, y = (-4).dp)
@@ -159,6 +160,7 @@ fun EditProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -169,7 +171,7 @@ fun EditProfileScreen(
             "Informasi Profil",
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            color = Orange500
+            color = Color(0xFFFF9800)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -181,10 +183,12 @@ fun EditProfileScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor     = Orange500,
+                focusedBorderColor     = Color(0xFFFF9800),
                 unfocusedBorderColor   = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor  = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
 
@@ -197,10 +201,12 @@ fun EditProfileScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor     = Orange500,
+                focusedBorderColor     = Color(0xFFFF9800),
                 unfocusedBorderColor   = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor  = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
 
@@ -213,10 +219,12 @@ fun EditProfileScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor     = Orange500,
+                focusedBorderColor     = Color(0xFFFF9800),
                 unfocusedBorderColor   = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor  = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
 
@@ -232,10 +240,12 @@ fun EditProfileScreen(
             placeholder = { Text("Ceritakan sedikit tentang dirimu...") },
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor     = Orange500,
+                focusedBorderColor     = Color(0xFFFF9800),
                 unfocusedBorderColor   = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor  = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
 
@@ -254,10 +264,10 @@ fun EditProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Orange500),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text("Simpan Perubahan", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text("Simpan Perubahan", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.White)
         }
     }
 }
@@ -265,7 +275,12 @@ fun EditProfileScreen(
 
 @Composable
 fun NotificationScreen(onBack: () -> Unit) {
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(24.dp)
+    ) {
         ScreenHeader("Notifikasi", onBack)
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Belum ada notifikasi baru.", color = Color.Gray)
@@ -301,7 +316,7 @@ fun SettingsScreen(
                     showSyncDialog = false
                     recipeViewModel.syncLocalToFirestore()
                 }) {
-                    Text("Ya, Sync", color = Orange500, fontWeight = FontWeight.Bold)
+                    Text("Ya, Sync", color = Color(0xFFFF9800), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -312,7 +327,12 @@ fun SettingsScreen(
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(24.dp)
+    ) {
         ScreenHeader("Pengaturan", onBack)
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -336,7 +356,7 @@ fun SettingsScreen(
                 Switch(
                     checked = isDarkMode,
                     onCheckedChange = { onThemeChange(it) },
-                    colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = Orange500)
+                    colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = Color(0xFFFF9800))
                 )
             },
             colors = ListItemDefaults.colors(containerColor = Color.Transparent)
@@ -359,21 +379,21 @@ fun SettingsScreen(
                 Icon(
                     imageVector = Icons.Default.Sync,
                     contentDescription = null,
-                    tint = Orange500
+                    tint = Color(0xFFFF9800)
                 )
             },
             trailingContent = {
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color    = Orange500,
+                        color    = Color(0xFFFF9800),
                         strokeWidth = 2.dp
                     )
                 } else {
                     TextButton(onClick = { showSyncDialog = true }) {
                         Text(
                             "Sync",
-                            color      = Orange500,
+                            color      = Color(0xFFFF9800),
                             fontWeight = FontWeight.Bold
                         )
                     }

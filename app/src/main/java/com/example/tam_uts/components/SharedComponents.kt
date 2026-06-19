@@ -37,7 +37,7 @@ fun ScreenHeader(title: String, onBack: () -> Unit) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
         }
         Spacer(modifier = Modifier.width(16.dp))
-        Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
     }
 }
 
@@ -54,6 +54,7 @@ fun RecipeCard(
             .height(210.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -83,7 +84,13 @@ fun RecipeCard(
                 }
             }
             Column(modifier = Modifier.padding(8.dp)) {
-                Text(recipe.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                Text(
+                    text = recipe.name,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Text(recipe.origin, fontSize = 10.sp, color = Orange500)
             }
         }
@@ -92,11 +99,18 @@ fun RecipeCard(
 
 @Composable
 fun RegionListItem(origin: String, onClick: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable { onClick() }, colors = CardDefaults.cardColors(containerColor = LightGray)) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.Place, contentDescription = null, tint = Orange500)
             Spacer(modifier = Modifier.width(16.dp))
-            Text(origin, fontWeight = FontWeight.Medium)
+            Text(
+                text = origin,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -112,7 +126,7 @@ fun BookmarkRecipeItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = LightGray),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -126,7 +140,12 @@ fun BookmarkRecipeItem(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(recipe.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    text = recipe.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Text(recipe.origin, fontSize = 12.sp, color = Orange500)
             }
             IconButton(onClick = onBookmarkClick) {
@@ -144,8 +163,15 @@ fun BookmarkRecipeItem(
 @Composable
 fun CustomTextField(label: String, value: String, onValueChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
-        Text(label, fontWeight = FontWeight.Bold)
-        BasicTextField(value = value, onValueChange = onValueChange, modifier = Modifier.fillMaxWidth().background(LightGray, RoundedCornerShape(8.dp)).padding(16.dp))
+        Text(label, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
+                .padding(16.dp)
+        )
     }
 }
 
@@ -156,17 +182,21 @@ fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
             Icon(icon, contentDescription = null, tint = Orange500)
         }
         Spacer(modifier = Modifier.width(16.dp))
-        Text(title, modifier = Modifier.weight(1f), fontWeight = FontWeight.Medium)
+        Text(title, modifier = Modifier.weight(1f), fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onBackground)
         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
     }
 }
 
 @Composable
 fun AddressItem(label: String, address: String, isDefault: Boolean) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), border = if (isDefault) BorderStroke(1.dp, Orange500) else null) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        border = if (isDefault) BorderStroke(1.dp, Orange500) else null,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(label, fontWeight = FontWeight.Bold)
-            Text(address, color = Color.Gray)
+            Text(label, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(address, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f))
         }
     }
 }
@@ -176,6 +206,6 @@ fun IngredientItem(text: String) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 4.dp)) {
         Box(modifier = Modifier.size(6.dp).background(Orange500, CircleShape))
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text, fontSize = 14.sp, color = Color.DarkGray)
+        Text(text, fontSize = 14.sp, color = MaterialTheme.colorScheme.onBackground)
     }
 }

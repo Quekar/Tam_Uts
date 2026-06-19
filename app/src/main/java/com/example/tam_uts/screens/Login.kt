@@ -25,9 +25,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tam_uts.R
-import com.example.tam_uts.components.LightGray
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tam_uts.R
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.viewmodel.AuthUiState
 import com.example.tam_uts.viewmodel.AuthViewModel
@@ -63,7 +62,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -108,7 +107,9 @@ fun LoginScreen(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground
             )
         )
 
@@ -136,7 +137,9 @@ fun LoginScreen(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange500,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground
             )
         )
 
@@ -164,7 +167,7 @@ fun LoginScreen(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text("Masuk", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
         }
 

@@ -1,6 +1,7 @@
 package com.example.tam_uts.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.BookmarkRecipeItem
-import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.components.RegionListItem
 import com.example.tam_uts.data.DummyData
@@ -60,7 +60,12 @@ fun RegionsScreen(
         }
     }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp)
+    ) {
         Text("Eksplorasi Wilayah", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
         Text("Temukan masakan khas dari berbagai belahan dunia", fontSize = 14.sp, color = Color.Gray)
 
@@ -76,7 +81,7 @@ fun RegionsScreen(
                     onClick = { selectedFilter = tab },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSelected) Orange500 else LightGray,
+                        containerColor = if (isSelected) Orange500 else MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = if (isSelected) Color.White else Orange500
                     ),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)

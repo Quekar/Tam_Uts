@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tam_uts.components.BookmarkRecipeItem
-import com.example.tam_uts.components.LightGray
 import com.example.tam_uts.components.Orange500
 import com.example.tam_uts.data.Recipe
 import com.example.tam_uts.viewmodel.RecipeViewModel
@@ -50,7 +49,12 @@ fun SearchScreen(
         }
     }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp)
+    ) {
         Text(
             text = "Cari Inspirasi Masak",
             fontSize = 22.sp,
@@ -86,7 +90,7 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
-                .background(LightGray)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {}
 
         if (error != null && searchQuery.isNotEmpty()) {
