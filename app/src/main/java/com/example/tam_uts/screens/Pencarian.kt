@@ -35,6 +35,7 @@ fun SearchScreen(
     val randomRecipes by recipeViewModel.randomRecipes.collectAsState()
     val isLoading by recipeViewModel.isLoading.collectAsState()
     val error by recipeViewModel.error.collectAsState()
+    val bookmarkedRecipes by recipeViewModel.bookmarkedRecipes.collectAsState()
 
     LaunchedEffect(Unit) {
         if (randomRecipes.isEmpty()) {
@@ -119,7 +120,12 @@ fun SearchScreen(
                         )
                     }
                     items(randomRecipes) { recipe ->
-                        BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
+                        BookmarkRecipeItem(
+                            recipe = recipe,
+                            isBookmarked = bookmarkedRecipes.any { it.id == recipe.id },
+                            onBookmarkClick = { recipeViewModel.toggleBookmark(recipe) },
+                            onClick = { onRecipeClick(recipe) }
+                        )
                     }
                 } else {
                     if (apiRecipes.isEmpty() && !isLoading) {
@@ -147,7 +153,12 @@ fun SearchScreen(
                                 ingredients = emptyList(),
                                 instructions = emptyList()
                             )
-                            BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
+                            BookmarkRecipeItem(
+                                recipe = recipe,
+                                isBookmarked = bookmarkedRecipes.any { it.id == recipe.id },
+                                onBookmarkClick = { recipeViewModel.toggleBookmark(recipe) },
+                                onClick = { onRecipeClick(recipe) }
+                            )
                         }
                     }
                 }

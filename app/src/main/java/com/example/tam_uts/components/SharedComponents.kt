@@ -118,7 +118,7 @@ fun RegionListItem(origin: String, onClick: () -> Unit) {
 @Composable
 fun BookmarkRecipeItem(
     recipe: Recipe,
-    isBookmarked: Boolean = true,
+    isBookmarked: Boolean = false,
     onBookmarkClick: () -> Unit = {},
     onClick: () -> Unit
 ) {

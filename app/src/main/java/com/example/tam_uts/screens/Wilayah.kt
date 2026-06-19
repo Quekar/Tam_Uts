@@ -41,6 +41,7 @@ fun RegionsScreen(
     val apiRecipes by recipeViewModel.recipes.collectAsState()
     val isLoading by recipeViewModel.isLoading.collectAsState()
     val error by recipeViewModel.error.collectAsState()
+    val bookmarkedRecipes by recipeViewModel.bookmarkedRecipes.collectAsState()
 
     val indonesianRecipes = remember {
         DummyData.dummyRecipes.filter { it.regionCategory == "Indonesia" }
@@ -125,7 +126,12 @@ fun RegionsScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(recipesInRegion) { recipe ->
-                        BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
+                        BookmarkRecipeItem(
+                            recipe = recipe,
+                            isBookmarked = bookmarkedRecipes.any { it.id == recipe.id },
+                            onBookmarkClick = { recipeViewModel.toggleBookmark(recipe) },
+                            onClick = { onRecipeClick(recipe) }
+                        )
                     }
                 }
             }
@@ -156,7 +162,12 @@ fun RegionsScreen(
                                 ingredients = emptyList(),
                                 instructions = emptyList()
                             )
-                            BookmarkRecipeItem(recipe, onClick = { onRecipeClick(recipe) })
+                            BookmarkRecipeItem(
+                                recipe = recipe,
+                                isBookmarked = bookmarkedRecipes.any { it.id == recipe.id },
+                                onBookmarkClick = { recipeViewModel.toggleBookmark(recipe) },
+                                onClick = { onRecipeClick(recipe) }
+                            )
                         }
                     }
                 }
